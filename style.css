@@ -1,0 +1,133 @@
+/* --- Apple Style CSS Variables --- */
+:root {
+  --bg-color: #000000;
+  --card-bg: rgba(28, 28, 30, 0.65); 
+  --card-border: rgba(255, 255, 255, 0.12);
+  --accent-glow: radial-gradient(circle at 50% 0%, #1a2a3a, #000000 90%);
+  --text-main: #f5f5f7;
+  --text-muted: #86868b;
+  --accent-blue: #0071e3; 
+  --btn-soft-bg: rgba(0, 113, 227, 0.15); 
+  --radius-xl: 28px; 
+  --radius-l: 20px;
+  --radius-m: 14px;
+  --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; outline: none; }
+
+body {
+  margin: 0;
+  font-family: var(--font-stack);
+  background-color: var(--bg-color);
+  background-image: var(--accent-glow);
+  background-attachment: fixed;
+  background-size: 100% 100vh;
+  background-repeat: no-repeat;
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-top: 130px; 
+}
+
+/* --- Navigation --- */
+.sticky-nav {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+  background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0.5rem 0; height: 110px; display: flex; align-items: center;
+}
+.nav-container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+
+/* Logo */
+.logo { display: flex; align-items: center; text-decoration: none; }
+.logo-img { height: 80px; width: auto; display: block; background-color: transparent; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.logo:hover .logo-img { transform: scale(1.05); }
+
+/* --- NEU: PROFIL AVATAR --- */
+.profile-avatar {
+  width: 42px; height: 42px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1.1rem;
+  border: 2px solid transparent; /* Standard: Kein Rand */
+  margin-left: 15px;
+  transition: all 0.3s ease;
+  cursor: default;
+  text-transform: uppercase;
+}
+
+/* Der Premium-Effekt */
+.profile-avatar.premium-gold {
+  border-color: #f59e0b; /* Goldener Rand */
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); /* Goldener Schein */
+  color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* Links */
+.nav-links { display: flex; gap: 25px; align-items: center; }
+.nav-links a { color: var(--text-muted); text-decoration: none; font-size: 1rem; font-weight: 500; transition: color 0.2s ease; }
+.nav-links a:hover { color: var(--text-main); }
+.nav-links a.active-link { color: var(--text-main); border-bottom: 2px solid var(--accent-blue); padding-bottom: 4px; }
+
+/* Hero & Layout */
+.hero { max-width: 900px; margin: 2rem auto 4rem; padding: 0 1.5rem; text-align: center; }
+.hero h1 { font-size: 3.5rem; line-height: 1.1; letter-spacing: -0.03em; font-weight: 700; margin-bottom: 1rem; background: linear-gradient(180deg, #fff 20%, #999 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero p.subtitle { font-size: 1.3rem; color: var(--text-muted); font-weight: 400; max-width: 680px; margin: 0 auto; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem 6rem; }
+.section { margin-bottom: 5rem; }
+.section-title { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; }
+.section-intro { font-size: 1.1rem; color: var(--text-muted); max-width: 720px; margin: 0 0 2rem; }
+
+/* Grid & Cards */
+.bento-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+@media (min-width: 768px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .bento-grid { grid-template-columns: repeat(3, 1fr); } .card.wide { grid-column: span 2; } }
+.card { background: var(--card-bg); border-radius: var(--radius-xl); padding: 2rem; border: 1px solid var(--card-border); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease; position: relative; }
+.card:hover { background: rgba(45, 45, 50, 0.8); border-color: rgba(255,255,255,0.2); transform: translateY(-4px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+.card h3 { font-size: 1.5rem; margin: 0 0 0.8rem; font-weight: 600; }
+.card p { font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem; flex-grow: 1; }
+
+/* Buttons & Actions */
+.card-actions { display: flex; gap: 12px; margin-top: auto; padding-top: 10px; }
+.card-note, a.card-note { flex: 1; text-align: center; background-color: var(--btn-soft-bg); color: var(--accent-blue); padding: 12px 16px; border-radius: 14px; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: all 0.2s ease; border: 1px solid rgba(0, 113, 227, 0.2); display: inline-flex; align-items: center; justify-content: center; }
+.card-note:hover { background-color: var(--accent-blue); color: #fff; transform: scale(1.02); border-color: transparent; box-shadow: 0 5px 15px rgba(0, 113, 227, 0.4); }
+.fav-toggle { flex: 1; padding: 12px 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: var(--text-muted); font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; }
+.fav-toggle:hover { border-color: #fff; color: #fff; background: rgba(255,255,255,0.05); }
+.fav-toggle.fav-active { border-color: var(--accent-blue); color: var(--accent-blue); background: rgba(0, 113, 227, 0.1); }
+.primary-btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; border-radius: 16px; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; background: var(--accent-blue); color: #fff; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 113, 227, 0.3); text-decoration: none; }
+.primary-btn:hover { background: #0077ED; transform: scale(1.02); box-shadow: 0 8px 30px rgba(0, 113, 227, 0.5); }
+
+/* Login */
+.login-box { margin-top: 2rem; padding: 3rem; border-radius: 28px; border: 1px solid rgba(255,255,255,0.15); background: rgba(20, 20, 22, 0.7); box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; }
+.login-input { width: 100%; margin-bottom: 1.2rem; padding: 16px 20px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.4); color: #fff; font-size: 1.1rem; transition: border 0.2s, box-shadow 0.2s; }
+.login-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2); }
+.login-message { margin-top: 1rem; font-size: 0.9rem; min-height: 1.2em; }
+.login-success { color: #4ade80; } .login-error { color: #ff453a; }
+
+/* Icons & Footer */
+.icon-placeholder { width: 50px; height: 50px; background: rgba(255,255,255,0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; font-size: 1.5rem; }
+.footer { border-top: 1px solid var(--card-border); padding: 4rem 0; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .sticky-nav { height: 90px; }
+  .logo-img { height: 60px; }
+  .nav-links { display: none; } 
+  .card-actions { flex-direction: column; }
+  .card-note, .fav-toggle { width: 100%; }
+  .login-box { padding: 1.5rem; }
+  body { padding-top: 110px; }
+  /* Abstand Avatar auf Handy */
+  .profile-avatar { margin-left: 10px; }
+}
+
+/* Hilfsklassen */
+.card-ki { background: linear-gradient(135deg, rgba(28, 40, 51, 0.8), rgba(0,0,0,0.8)); border-color: rgba(41, 151, 255, 0.3); }
+.icon-ki { background: var(--accent-blue); color: #fff; }
+.card-warning { border-color: rgba(255, 69, 58, 0.5); background: linear-gradient(135deg, rgba(50, 10, 10, 0.7), rgba(0,0,0,0.7)); }
+.tracker-table, .client-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tracker-table th, .tracker-table td, .client-table th, .client-table td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }

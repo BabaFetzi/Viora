@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Viora – Coach Cockpit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Styles für Einladung & Übersicht */
+    .invite-box {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+      border: 1px dashed var(--accent-blue);
+      border-radius: var(--radius-l);
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .invite-inputs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+
+    .user-card-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .user-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; position: relative; transition: transform 0.2s ease; }
+    .user-card:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-3px); }
+    
+    .user-header { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+    .user-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; border: 2px solid #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+    
+    .status-badge { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 5px; }
+    .status-text { font-size: 0.85rem; color: var(--text-muted); }
+    .bg-green { background-color: #10b981; box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
+    .bg-yellow { background-color: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+    .bg-red { background-color: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+    .bg-grey { background-color: #555; }
+
+    .info-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
+    .select-mini { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 4px; border-radius: 6px; font-size: 0.8rem; }
+
+    /* Task Creator Styles */
+    .task-creator { background: rgba(255,255,255,0.03); border: 1px solid var(--card-border); padding: 25px; border-radius: var(--radius-m); }
+    .task-top-row { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 15px; align-items: start; }
+    @media (max-width: 700px) { .task-top-row { grid-template-columns: 1fr; } }
+
+    .user-checkbox-grid { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; min-height: 46px; }
+    .user-checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.85rem; background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 4px; border: 1px solid transparent; }
+    .user-checkbox-label:hover { border-color: rgba(255,255,255,0.2); }
+    
+    .form-label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-input, .form-select { padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.5); color: #fff; width: 100%; font-family: inherit; }
+    textarea.form-input { resize: vertical; min-height: 80px; }
+    input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <a href="#" class="logo"><img src="logo.png" alt="Viora Logo" class="logo-img"><span style="color:var(--accent-blue); font-size:0.8em; margin-left:10px;">COACH</span></a>
+      <div class="nav-links"><a href="index.html">Logout</a></div>
+    </div>
+  </nav>
+
+  <header class="hero" style="margin-top: 2rem; margin-bottom: 2rem; text-align: left;">
+    <h1>Team Management</h1>
+    <p class="subtitle" style="margin: 0;">Teilnehmer verwalten und begleiten.</p>
+  </header>
+
+  <main class="container">
+
+    <section class="section">
+      <h2 class="section-title">✨ Teilnehmer einladen</h2>
+      <div class="invite-box">
+        <div class="icon-placeholder" style="margin: 0 auto 15px; background: rgba(16, 185, 129, 0.1); color: #10b981;"><i class="ph ph-user-plus"></i></div>
+        <h3>Neuen Zugang erstellen</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Der Teilnehmer erhält sofort Premium-Status und Gruppenzugang.</p>
+        <div class="invite-inputs">
+          <input type="text" id="new-user-name" class="form-input" placeholder="Name (z.B. Max)" style="flex:1; min-width:150px;">
+          <input type="text" id="new-user-login" class="form-input" placeholder="Login-Name (z.B. max)" style="flex:1; min-width:150px;">
+          <select id="new-user-group" class="form-select" style="flex:1; min-width:150px;">
+            <option value="WERKSTATT">Werkstatt</option>
+            <option value="BUERO">Büro</option>
+            <option value="KUECHE">Küche</option>
+            <option value="GARTEN">Garten</option>
+          </select>
+          <button class="primary-btn" onclick="inviteUser()">Hinzufügen</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">👥 Aktuelle Teilnehmer-Infos</h2>
+      <div id="team-grid" class="user-card-grid"></div>
+    </section>
+
+    <section class="section" style="margin-top: 60px;">
+      <h2 class="section-title">📝 Aufgabe erstellen</h2>
+      <div class="task-creator">
+        <div class="task-top-row">
+          <div>
+            <label class="form-label">Zielgruppe</label>
+            <select id="task-group-select" class="form-select" onchange="updateUserCheckboxes()">
+              <option value="" disabled selected>-- Wählen --</option>
+              <option value="WERKSTATT">Werkstatt</option>
+              <option value="BUERO">Büro</option>
+              <option value="KUECHE">Küche</option>
+              <option value="GARTEN">Garten</option>
+            </select>
+          </div>
+          <div id="user-select-area" style="opacity:0.5; pointer-events:none;">
+            <label class="form-label">Einzelne Teilnehmer (Optional)</label>
+            <div id="user-checkboxes" class="user-checkbox-grid"><span style="font-size:0.8rem; color:#666; padding:5px;">Erst Gruppe wählen...</span></div>
+          </div>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label class="form-label">Aufgabentitel</label>
+          <input type="text" id="task-title" class="form-input" placeholder="Kurzer, klarer Titel...">
+        </div>
+        <div style="margin-bottom: 15px;">
+          <label class="form-label">Beschreibung</label>
+          <textarea id="task-desc" class="form-input" placeholder="Was genau ist zu tun? Details hier rein..."></textarea>
+        </div>
+        <div style="display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <label class="form-label">Fixieren auf Datum (Deadline)</label>
+            <input type="date" id="task-date" class="form-input">
+          </div>
+          <div style="flex: 1; min-width: 200px;">
+            <button class="primary-btn" onclick="createTask()" style="width:100%; justify-content:center;">Aufgabe senden</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:30px;">
+        <h3 style="font-size:1.2rem; margin-bottom:15px;">Erstellte Aufgaben</h3>
+        <div id="task-history-list"></div>
+      </div>
+    </section>
+
+    <section class="section" style="border-top:1px solid var(--card-border); padding-top:20px; margin-top:50px;">
+      <button class="card-note" style="background:none; border:none; cursor:pointer; opacity:0.5; color:#ef4444;" onclick="resetSystem()">⚠️ Datenbank zurücksetzen</button>
+    </section>
+
+  </main>
+
+  <footer class="footer"><p>© 2025 Viora.</p></footer>
+
+  <script>
+    const DB_KEY = 'VIORA_DB'; 
+
+    const defaultUsers = { 'anna': { name: 'Anna', group: 'BUERO', mood: 'green' }, 'ben': { name: 'Ben', group: 'WERKSTATT', mood: 'red' } };
+
+    function getDB() {
+      const raw = localStorage.getItem(DB_KEY);
+      if (!raw) {
+        const init = { users: defaultUsers, tasks: [] };
+        localStorage.setItem(DB_KEY, JSON.stringify(init));
+        return init;
+      }
+      return JSON.parse(raw);
+    }
+    function saveDB(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); renderTeam(); renderHistory(); }
+
+    function inviteUser() {
+      const name = document.getElementById('new-user-name').value.trim();
+      const login = document.getElementById('new-user-login').value.trim().toLowerCase();
+      const group = document.getElementById('new-user-group').value;
+      if(!name || !login) return alert("Bitte Name und Login ausfüllen.");
+      const db = getDB();
+      if(db.users[login]) return alert("Dieser Login existiert schon.");
+      db.users[login] = { name: name, group: group, mood: 'yellow' };
+      saveDB(db);
+      document.getElementById('new-user-name').value = ''; document.getElementById('new-user-login').value = '';
+      alert(`User ${name} wurde eingeladen!`);
+    }
+
+    function renderTeam() {
+      const db = getDB();
+      const grid = document.getElementById('team-grid');
+      grid.innerHTML = '';
+      Object.keys(db.users).forEach(username => {
+        const u = db.users[username];
+        let statusDot = 'bg-grey', statusLabel = 'Kein Check-in';
+        if(u.mood === 'green') { statusDot = 'bg-green'; statusLabel = 'Hohe Energie'; }
+        if(u.mood === 'yellow') { statusDot = 'bg-yellow'; statusLabel = 'Stabil'; }
+        if(u.mood === 'red') { statusDot = 'bg-red'; statusLabel = 'Niedrig / Pause'; }
+        
+        let openCount = 0;
+        if(db.tasks) openCount = db.tasks.filter(t => (t.group === u.group) && (!t.assignedTo || t.assignedTo.length === 0 || t.assignedTo.includes(u.name)) && (!t.completedBy || !t.completedBy.includes(u.name))).length;
+
+        grid.innerHTML += `
+          <div class="user-card">
+            <div class="user-header">
+              <div class="user-avatar">${u.name.charAt(0)}</div>
+              <div><h3 style="margin:0; font-size:1.1rem;">${u.name}</h3><span class="status-text"><span class="status-badge ${statusDot}"></span>${statusLabel}</span></div>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:10px; margin-top:10px;">
+              <div class="info-row"><span style="color:var(--text-muted);">Gruppe:</span><select class="select-mini" onchange="changeGroup('${username}', this.value)"><option value="WERKSTATT" ${u.group==='WERKSTATT'?'selected':''}>Werkstatt</option><option value="BUERO" ${u.group==='BUERO'?'selected':''}>Büro</option><option value="KUECHE" ${u.group==='KUECHE'?'selected':''}>Küche</option><option value="GARTEN" ${u.group==='GARTEN'?'selected':''}>Garten</option></select></div>
+              <div class="info-row"><span style="color:var(--text-muted);">Offene Tasks:</span><strong style="color:${openCount > 0 ? '#fff' : '#888'}">${openCount}</strong></div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function changeGroup(u, g) { const db = getDB(); if(db.users[u]) { db.users[u].group = g; saveDB(db); updateUserCheckboxes(); } }
+
+    function updateUserCheckboxes() {
+      const g = document.getElementById('task-group-select').value;
+      const area = document.getElementById('user-select-area');
+      const box = document.getElementById('user-checkboxes');
+      if(!g) { area.style.opacity = '0.5'; area.style.pointerEvents = 'none'; return; }
+      area.style.opacity = '1'; area.style.pointerEvents = 'auto'; box.innerHTML = '';
+      const db = getDB();
+      const us = Object.keys(db.users).filter(u => db.users[u].group === g);
+      if(us.length === 0) box.innerHTML = '<span style="color:#666; font-size:0.8rem;">Keine Teilnehmer.</span>';
+      else us.forEach(n => { const u = db.users[n]; box.innerHTML += `<label class="user-checkbox-label"><input type="checkbox" value="${u.name}" class="task-user-cb"> ${u.name}</label>`; });
+    }
+
+    function createTask() {
+      const title = document.getElementById('task-title').value;
+      const group = document.getElementById('task-group-select').value;
+      const desc = document.getElementById('task-desc').value;
+      const date = document.getElementById('task-date').value;
+      if(!title || !group) return alert("Bitte Gruppe und Titel angeben.");
+      const cb = document.querySelectorAll('.task-user-cb:checked');
+      const assigned = Array.from(cb).map(c => c.value);
+      const db = getDB();
+      db.tasks.push({ id: Date.now(), title, group, desc, dueDate: date, assignedTo: assigned, createdDate: new Date().toLocaleDateString(), completedBy: [] });
+      saveDB(db);
+      document.getElementById('task-title').value = ''; document.getElementById('task-desc').value = ''; document.getElementById('task-date').value = '';
+      document.querySelectorAll('.task-user-cb').forEach(c => c.checked = false);
+      alert("Aufgabe gesendet.");
+    }
+
+    function renderHistory() {
+      const db = getDB();
+      const list = document.getElementById('task-history-list');
+      list.innerHTML = '';
+      if(!db.tasks || db.tasks.length === 0) { list.innerHTML = '<div style="color:#666; font-style:italic;">Noch keine Aufgaben erstellt.</div>'; return; }
+
+      // NEU: Anzeige wer es erledigt hat
+      db.tasks.slice().reverse().forEach(t => {
+        let assignedText = (t.assignedTo && t.assignedTo.length > 0) ? t.assignedTo.join(', ') : "Alle";
+        let dateInfo = t.dueDate ? `<span style="color:#f59e0b; margin-left:10px; font-size:0.8rem;">📅 ${t.dueDate}</span>` : '';
+        
+        // Status Logik für Coach
+        let statusHTML = '<span style="color:#ef4444; font-size:0.8rem; border:1px solid #ef4444; padding:2px 6px; border-radius:4px;">Offen</span>';
+        if(t.completedBy && t.completedBy.length > 0) {
+          statusHTML = `<span style="color:#10b981; font-size:0.8rem; border:1px solid #10b981; padding:2px 6px; border-radius:4px;">✔ Erledigt: ${t.completedBy.join(', ')}</span>`;
+        }
+
+        list.innerHTML += `
+          <div style="padding:15px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+              <div style="font-weight:bold; margin-bottom:4px;">${t.title} ${dateInfo}</div>
+              <div style="font-size:0.8rem; color:#888;">${t.group} • Für: ${assignedText}</div>
+            </div>
+            <div style="text-align:right;">
+              <div>${statusHTML}</div>
+              <div style="font-size:0.75rem; color:#666; margin-top:5px;">Erstellt: ${t.createdDate}</div>
+            </div>
+          </div>`;
+      });
+    }
+
+    function resetSystem() { if(confirm("Datenbank wirklich löschen?")) { localStorage.removeItem(DB_KEY); location.reload(); } }
+    document.addEventListener('DOMContentLoaded', () => { renderTeam(); renderHistory(); });
+  </script>
+</body>
+</html>

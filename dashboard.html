@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Viora – Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    /* (Styles wie gehabt) */
+    .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 160px; padding-top: 20px; gap: 12px; }
+    .chart-bar-wrapper { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
+    .chart-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height 1s ease; opacity: 0.5; position: relative; }
+    .chart-bar.active-day { opacity: 1; box-shadow: 0 0 15px rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.4); }
+    .chart-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; font-weight: 600; }
+    .active-day .chart-label { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+    .bar-green { background: #10b981; } .bar-yellow { background: #f59e0b; } .bar-red { background: #ef4444; } .bar-grey { background: rgba(255,255,255,0.1); } 
+    .today-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 600px) { .today-grid { grid-template-columns: 1fr 1fr; } }
+    .status-box { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid transparent; }
+    .status-box.needed { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .status-box.done-green { border-left-color: #10b981; }
+    .status-box.done-yellow { border-left-color: #f59e0b; }
+    .status-box.done-red { border-left-color: #ef4444; }
+    .reminder-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; font-size: 0.85rem; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+    .mini-task-list { list-style: none; padding: 0; margin: 0; }
+    .mini-task-list li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
+    .mini-task-list li:last-child { border-bottom: none; }
+    .task-source-coach { color: #f59e0b; font-weight: bold; font-size: 0.7rem; border: 1px solid #f59e0b; padding: 1px 4px; border-radius: 4px; margin-right: 8px; }
+    .empty-tasks { font-style: italic; color: var(--text-muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <div style="display:flex; align-items:center;">
+        <a href="dashboard.html" class="logo">
+          <img src="logo.png" alt="Viora Logo" class="logo-img">
+        </a>
+        <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html" class="active-link"><i class="ph ph-house"></i> Home</a>
+        <a href="workplace.html"><i class="ph ph-briefcase"></i> Workplace</a>
+        <a href="struktur.html"><i class="ph ph-calendar-check"></i> Alltag</a>
+        <a href="psyche.html"><i class="ph ph-brain"></i> Psyche</a>
+        <a href="digital.html"><i class="ph ph-desktop"></i> Digital</a>
+        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Dein Bereich.</h1>
+    <p class="subtitle">Willkommen zurück. Hier ist deine Übersicht für heute.</p>
+  </header>
+
+  <main class="container">
+    
+    <section class="section">
+      <h2 class="section-title">Dein Status</h2>
+      <div class="bento-grid">
+        
+        <article class="card wide">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3>⚡ Energie-Verlauf</h3>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Diese Woche</span>
+          </div>
+          <div class="chart-container" id="week-chart"></div>
+        </article>
+
+        <article class="card wide" id="today-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+            <h3>📅 Heute <span id="current-date" style="font-weight:400; color:var(--text-muted); font-size:1rem; margin-left:10px;">Datum</span></h3>
+          </div>
+          <div class="today-grid">
+            <div id="status-container" class="status-box">
+              <div style="text-align:center;">
+                <p style="margin-bottom:5px; font-weight:600;">Noch kein Check-in!</p>
+                <a href="struktur.html" class="reminder-btn">⚠️ Jetzt Energie prüfen</a>
+              </div>
+            </div>
+            <div style="padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.1);">
+              <h4 style="margin:0 0 10px 0; font-size:1rem; color:var(--accent-blue);">Deine Aufgaben</h4>
+              <ul class="mini-task-list" id="today-tasks"><li class="empty-tasks">Lade Aufgaben...</li></ul>
+              <div style="margin-top:15px; text-align:right;">
+                <a href="workplace.html" style="font-size:0.75rem; color:var(--text-muted); text-decoration:none; margin-right:10px;">Zum Workplace</a>
+                <a href="struktur.html" style="font-size:0.75rem; color:var(--text-muted); text-decoration:none;">Eigene Liste</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" id="mein-bereich">
+          <h3>★ Favoriten</h3>
+          <div id="favorites-grid" style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;"></div>
+          <p id="favorites-empty-hint" style="font-size: 0.8rem; color: var(--text-muted);">Keine Favoriten gewählt.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="section" id="themen">
+      <h2 class="section-title">Themenübersicht</h2>
+      <div class="bento-grid">
+        <article class="card topic-card" data-topic="struktur">
+          <div class="icon-placeholder">📅</div><h3>Struktur &amp; Alltag</h3><p>Routinen und Energie-Management.</p>
+          <div class="card-actions"><a href="struktur.html" class="card-note">Öffnen</a><button class="fav-toggle" data-topic="struktur">Merken</button></div>
+        </article>
+        <article class="card topic-card" data-topic="psyche">
+          <div class="icon-placeholder">🧠</div><h3>Psychische Gesundheit</h3><p>Notfall-Tools und Selbsthilfe.</p>
+          <div class="card-actions"><a href="psyche.html" class="card-note">Öffnen</a><button class="fav-toggle" data-topic="psyche">Merken</button></div>
+        </article>
+        <article class="card topic-card" data-topic="digital">
+          <div class="icon-placeholder">💻</div><h3>Digitale Skills</h3><p>E-Mail Training und Sicherheit.</p>
+          <div class="card-actions"><a href="digital.html" class="card-note">Öffnen</a><button class="fav-toggle" data-topic="digital">Merken</button></div>
+        </article>
+        <article class="card topic-card card-ki" data-topic="digital">
+          <div class="icon-placeholder icon-ki">✨</div><h3 class="ki-title">KI &amp; Zukunft</h3><p class="ki-text">Der "Befehls-Baukasten": KI nutzen.</p>
+          <div class="card-actions"><a href="digital.html#ki" class="card-note ki-note">Ausprobieren</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" style="border-top: 1px solid var(--card-border); padding-top: 40px; margin-top: 60px;">
+      <div class="bento-grid">
+        <article class="card" style="border-color: rgba(239, 68, 68, 0.3);">
+          <h3 style="color: #fca5a5;">Daten löschen</h3>
+          <button class="primary-btn" style="background: #ef4444;" onclick="resetAllData()">Alles zurücksetzen</button>
+        </article>
+        <article class="card">
+          <h3>Rechtliches</h3>
+          <div class="card-actions"><a href="legal.html" class="card-note">Ansehen</a></div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer"><p>© 2025 Viora.</p></footer>
+
+  <script>
+    const STORAGE_KEY_FAVS = 'einfachErklaertFavorites';
+    const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
+    const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
+    const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
+    const DB_KEY = 'einfachErklaert_SharedDB';
+    const NETWORK_KEY = 'viora_MyNetwork';
+    const USER_KEY = 'viora_current_user'; // WICHTIG
+
+    const topicMeta = { struktur: { title: 'Struktur & Alltag' }, psyche: { title: 'Psychische Gesundheit' }, digital: { title: 'Digitale Skills' } };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const options = { weekday: 'long', day: 'numeric', month: 'long' };
+      document.getElementById('current-date').innerText = new Date().toLocaleDateString('de-DE', options);
+      
+      renderFavs();
+      renderDashboardData();
+      
+      // AVATAR LOGIK
+      const userRaw = localStorage.getItem(USER_KEY);
+      const avatar = document.getElementById('user-profile');
+      if(userRaw && avatar) {
+        const user = JSON.parse(userRaw);
+        avatar.innerText = user.name.charAt(0).toUpperCase();
+        
+        // Check Premium (Netzwerk Code vorhanden?)
+        if(localStorage.getItem(NETWORK_KEY)) {
+          avatar.classList.add('premium-gold');
+        }
+      }
+    });
+
+    function renderDashboardData() {
+      const todayDate = new Date().toLocaleDateString();
+      const savedDate = localStorage.getItem(STORAGE_KEY_DATE);
+      const savedLevel = localStorage.getItem(STORAGE_KEY_ENERGY);
+      const hasEntryForToday = (savedDate === todayDate && savedLevel);
+      const statusContainer = document.getElementById('status-container');
+      
+      if (hasEntryForToday) {
+        let text = "", colorClass = "", icon = "";
+        if(savedLevel === 'green') { text = "Gute Energie"; colorClass = "done-green"; icon = "🟢"; }
+        if(savedLevel === 'yellow') { text = "Stabil"; colorClass = "done-yellow"; icon = "🟡"; }
+        if(savedLevel === 'red') { text = "Niedrig"; colorClass = "done-red"; icon = "🔴"; }
+        statusContainer.className = "status-box " + colorClass;
+        statusContainer.innerHTML = `<div style="text-align:center;"><div style="font-size:2rem; margin-bottom:5px;">${icon}</div><p style="font-weight:700; margin-bottom:0;">${text}</p><a href="struktur.html" class="card-note" style="margin-top:5px;">Ansehen</a></div>`;
+      } else {
+        statusContainer.className = "status-box needed";
+        statusContainer.innerHTML = `<div style="text-align:center;"><p style="margin-bottom:5px; font-weight:600; color:#ef4444;">Check ausstehend!</p><a href="struktur.html" class="reminder-btn">⚠️ Energie prüfen</a></div>`;
+      }
+
+      const taskListEl = document.getElementById('today-tasks');
+      taskListEl.innerHTML = '';
+      let coachHTML = '';
+      const myCode = localStorage.getItem(NETWORK_KEY);
+      
+      if (myCode) {
+        const db = JSON.parse(localStorage.getItem(DB_KEY) || '{"tasks":[]}');
+        const myTasks = db.tasks ? db.tasks.filter(t => t.group === myCode || t.group === 'all') : [];
+        myTasks.slice().reverse().slice(0,3).forEach(t => { coachHTML += `<li><span class="task-source-coach">COACH</span> ${t.title}</li>`; });
+      }
+
+      const ownTasks = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST) || "[]");
+      let ownHTML = ownTasks.slice(0,3).map(t => `<li>• ${t}</li>`).join('');
+
+      if (!coachHTML && !ownHTML) taskListEl.innerHTML = `<li class="empty-tasks">Keine Aufgaben offen.</li>`;
+      else taskListEl.innerHTML = coachHTML + ownHTML;
+
+      renderChart(hasEntryForToday, savedLevel);
+    }
+
+    function renderChart(hasData, level) {
+      const container = document.getElementById('week-chart');
+      container.innerHTML = '';
+      const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+      let jsDay = new Date().getDay(); let uiDayIndex = jsDay === 0 ? 6 : jsDay - 1;
+
+      days.forEach((day, index) => {
+        let cls = 'bar-grey'; let h = '15%';
+        if (index < uiDayIndex) { const h = ['bar-yellow', 'bar-green', 'bar-yellow'][index % 3]; barClass = h; height = '60%'; }
+        if (index === uiDayIndex && hasData) {
+           if(level === 'green') { cls = 'bar-green'; h = '90%'; }
+           if(level === 'yellow') { cls = 'bar-yellow'; h = '55%'; }
+           if(level === 'red') { cls = 'bar-red'; h = '30%'; }
+        }
+        container.innerHTML += `<div class="chart-bar-wrapper"><div class="chart-bar ${cls} ${index===uiDayIndex?'active-day':''}" style="height:${h};"></div><span class="chart-label">${day}</span></div>`;
+      });
+    }
+
+    function renderFavs() { 
+      const favs = JSON.parse(localStorage.getItem(STORAGE_KEY_FAVS) || "[]");
+      const grid = document.getElementById('favorites-grid');
+      const hint = document.getElementById('favorites-empty-hint');
+      grid.innerHTML = '';
+      if(favs.length===0){ hint.style.display='block'; return; }
+      hint.style.display='none';
+      favs.forEach(key => { if(topicMeta[key]) grid.innerHTML += `<div style="padding:10px; background:rgba(255,255,255,0.1); border-radius:8px; font-size:0.9rem;">📌 ${topicMeta[key].title}</div>`; });
+    }
+
+    function resetAllData() { if(confirm("Alles löschen?")) { localStorage.clear(); location.reload(); } }
+  </script>
+</body>
+</html>
