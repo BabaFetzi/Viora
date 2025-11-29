@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Viora – Mein Arbeitsplatz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    /* Styles identisch */
+    .group-banner {
+      background: linear-gradient(90deg, var(--accent-blue), #60a5fa);
+      padding: 30px;
+      border-radius: var(--radius-l);
+      margin-bottom: 30px;
+      display: flex; 
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0, 113, 227, 0.3);
+    }
+    .group-info h2 { margin: 0; font-size: 2rem; }
+    .group-info p { margin: 5px 0 0 0; opacity: 0.9; }
+
+    .task-list { display: grid; gap: 15px; }
+    .task-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .task-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.3); }
+    .task-card.done { opacity: 0.6; border-color: #10b981; }
+    .task-card.done::after {
+      content: '✔'; position: absolute; top: 10px; right: 15px; 
+      color: #10b981; font-size: 1.5rem; font-weight: bold;
+    }
+
+    .check-btn {
+      background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; margin-top: 15px;
+      transition: all 0.2s;
+    }
+    .check-btn:hover { background: #10b981; border-color: #10b981; color: white; }
+    
+    .no-group-msg { text-align: center; padding: 50px; background: rgba(255,255,255,0.05); border-radius: 20px; }
+    .personal-badge { background: #f59e0b; color: #000; font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 8px; text-transform: uppercase; }
+    
+    /* NEU: Datumsanzeige */
+    .due-date { font-size: 0.85rem; color: #fca5a5; display: inline-flex; align-items: center; gap: 5px; margin-top: 5px; background: rgba(239,68,68,0.1); padding: 2px 8px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <div style="display:flex; align-items:center;">
+        <a href="dashboard.html" class="logo">
+          <img src="logo.png" alt="Viora Logo" class="logo-img">
+        </a>
+        <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html"><i class="ph ph-house"></i> Home</a>
+        <a href="workplace.html" class="active-link"><i class="ph ph-briefcase"></i> Workplace</a>
+        <a href="struktur.html"><i class="ph ph-calendar-check"></i> Alltag</a>
+        <a href="psyche.html"><i class="ph ph-brain"></i> Psyche</a>
+        <a href="digital.html"><i class="ph ph-desktop"></i> Digital</a>
+        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Arbeitsplatz</h1>
+    <p class="subtitle">Deine Aufgaben und dein Team.</p>
+  </header>
+
+  <main class="container">
+
+    <div id="loading-view" style="text-align:center;">Lade Daten...</div>
+    
+    <div id="no-group-view" class="no-group-msg" style="display:none;">
+      <div class="icon-placeholder" style="margin: 0 auto 20px;"><i class="ph ph-users"></i></div>
+      <h2>Noch keine Zuordnung</h2>
+      <p>Bitte warte, bis dein Coach dich einer Arbeitsgruppe zugewiesen hat.</p>
+      <button onclick="location.reload()" class="primary-btn" style="margin-top:20px;">Neu laden</button>
+    </div>
+
+    <div id="workspace-view" style="display:none;">
+      <div class="group-banner">
+        <div class="group-info">
+          <p style="font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Deine Abteilung</p>
+          <h2 id="user-group-name">...</h2>
+        </div>
+        <div style="font-size: 3rem; opacity: 0.5;"><i class="ph ph-buildings"></i></div>
+      </div>
+
+      <section class="section">
+        <h2 class="section-title">Offene Aufgaben</h2>
+        <div id="tasks-container" class="task-list"></div>
+      </section>
+    </div>
+
+  </main>
+
+  <footer class="footer"><p>© 2025 Viora.</p></footer>
+
+  <script>
+    const DB_KEY = 'VIORA_DB';
+    const USER_KEY = 'viora_current_user';
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const userRaw = localStorage.getItem(USER_KEY);
+      if(!userRaw) { window.location.href = 'index.html'; return; }
+      currentUser = JSON.parse(userRaw);
+      
+      const avatar = document.getElementById('user-profile');
+      if(avatar) avatar.innerText = currentUser.name.charAt(0).toUpperCase();
+
+      loadWorkplaceData();
+    });
+
+    function getDB() {
+      const raw = localStorage.getItem(DB_KEY);
+      if (!raw) return { users: {}, tasks: [] }; 
+      return JSON.parse(raw);
+    }
+
+    function loadWorkplaceData() {
+      const db = getDB();
+      document.getElementById('loading-view').style.display = 'none';
+
+      const userData = db.users[currentUser.username];
+      if (!userData || !userData.group) {
+        document.getElementById('no-group-view').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('no-group-view').style.display = 'none';
+      document.getElementById('workspace-view').style.display = 'block';
+      
+      const myGroup = userData.group;
+      document.getElementById('user-group-name').innerText = myGroup;
+
+      renderTasks(db.tasks, myGroup, currentUser.name);
+    }
+
+    function renderTasks(allTasks, myGroup, myName) {
+      const container = document.getElementById('tasks-container');
+      container.innerHTML = '';
+
+      const myTasks = allTasks.filter(t => {
+        const groupMatch = (t.group === myGroup);
+        if(!groupMatch) return false;
+
+        const isAssignedSpecifically = (t.assignedTo && t.assignedTo.length > 0);
+        if(isAssignedSpecifically) {
+          return t.assignedTo.includes(myName);
+        }
+        return true;
+      });
+
+      if (myTasks.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted); text-align:center;">Alles erledigt! Keine offenen Aufgaben.</p>';
+        return;
+      }
+
+      myTasks.slice().reverse().forEach(task => {
+        const isDone = task.completedBy && task.completedBy.includes(currentUser.name);
+        const isPersonal = task.assignedTo && task.assignedTo.length > 0;
+
+        let actionBtn = '';
+        let cardClass = 'task-card';
+        let badge = isPersonal ? '<span class="personal-badge">Persönlich</span>' : '';
+        
+        // NEU: Datum Logik
+        let dateHTML = '';
+        if(task.dueDate) {
+          dateHTML = `<div class="due-date">📅 Fällig bis: ${task.dueDate}</div>`;
+        }
+
+        if(isDone) {
+          cardClass += ' done';
+          actionBtn = '<span style="color:#10b981; font-size:0.9rem;">Erledigt</span>';
+        } else {
+          actionBtn = `<button class="check-btn" onclick="markTaskDone(${task.id})"><i class="ph ph-check"></i> Erledigen</button>`;
+        }
+
+        container.innerHTML += `
+          <div class="${cardClass}">
+            <h3 style="margin:0 0 10px 0;">
+              ${task.title}
+              ${badge}
+            </h3>
+            <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:5px;">${task.desc || ''}</p>
+            ${dateHTML}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+              <span style="font-size:0.75rem; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:4px;">${task.group}</span>
+              ${actionBtn}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function markTaskDone(taskId) {
+      const db = getDB();
+      const task = db.tasks.find(t => t.id === taskId);
+      
+      if(task) {
+        if(!task.completedBy) task.completedBy = [];
+        if(!task.completedBy.includes(currentUser.name)) {
+          task.completedBy.push(currentUser.name);
+          localStorage.setItem(DB_KEY, JSON.stringify(db));
+          loadWorkplaceData();
+        }
+      }
+    }
+  </script>
+</body>
+</html>

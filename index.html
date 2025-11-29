@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Viora – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="Viora Logo" class="logo-img">
+      </a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="centered-screen">
+      <div>
+        <h1 class="login-hero-title">Wieder Anschluss finden.</h1>
+        <p class="login-hero-sub">Die Plattform für digitale Kompetenz und Struktur im Alltag.</p>
+      </div>
+
+      <div class="login-card-xl">
+        <div class="icon-placeholder" style="margin: 0 auto 20px;"><i class="ph ph-user-circle"></i></div>
+        <h2 style="margin-bottom: 30px; font-size: 1.8rem;">Anmeldung</h2>
+        
+        <form onsubmit="handleLogin(event)">
+          <input type="text" id="username" class="login-input-xl" placeholder="Benutzername" required>
+          <input type="password" id="password" class="login-input-xl" placeholder="Passwort" required>
+          <button type="submit" class="primary-btn btn-xl">Einloggen <i class="ph ph-arrow-right"></i></button>
+        </form>
+        
+        <p id="login-message" class="login-message"></p>
+        
+        <div style="margin-top: 30px; font-size: 0.9rem; color: var(--text-muted); border-top: 1px solid var(--card-border); padding-top: 20px; text-align: left;">
+          <strong>Demo Accounts:</strong><br>
+          👨‍🏫 Coach: <code>coach</code> (Passwort: coach)<br>
+          👤 Teilnehmer: <code>anna</code> (Passwort: anna)
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><p>© 2025 Viora.</p></footer>
+
+  <script>
+    function handleLogin(event) {
+      event.preventDefault();
+      const u = document.getElementById('username').value.trim().toLowerCase();
+      const p = document.getElementById('password').value;
+      const msg = document.getElementById('login-message');
+
+      const validUsers = ['coach', 'anna', 'ben', 'cara', 'dave'];
+
+      if (validUsers.includes(u) && u === p) {
+        const userObj = { 
+          username: u, 
+          role: u === 'coach' ? 'coach' : 'client',
+          name: u.charAt(0).toUpperCase() + u.slice(1) // Macht aus "anna" -> "Anna"
+        };
+        localStorage.setItem('viora_current_user', JSON.stringify(userObj));
+
+        msg.textContent = `Hallo ${userObj.name}! Weiterleitung...`;
+        msg.className = 'login-message login-success';
+        
+        setTimeout(() => {
+          window.location.href = u === 'coach' ? 'agoge.html' : 'dashboard.html';
+        }, 800);
+      } else {
+        msg.textContent = 'Unbekannter Benutzer oder falsches Passwort.';
+        msg.className = 'login-message login-error';
+      }
+    }
+  </script>
+</body>
+</html>

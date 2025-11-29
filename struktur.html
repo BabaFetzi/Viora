@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Viora – Alltag</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+<body>
+
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <div style="display:flex; align-items:center;">
+        <a href="dashboard.html" class="logo">
+          <img src="logo.png" alt="Viora Logo" class="logo-img">
+        </a>
+        <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
+      </div>
+      <div class="nav-links">
+        <a href="dashboard.html"><i class="ph ph-house"></i> Home</a>
+        <a href="workplace.html"><i class="ph ph-briefcase"></i> Workplace</a>
+        <a href="struktur.html" class="active-link"><i class="ph ph-calendar-check"></i> Alltag</a>
+        <a href="psyche.html"><i class="ph ph-brain"></i> Psyche</a>
+        <a href="digital.html"><i class="ph ph-desktop"></i> Digital</a>
+        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Dein Geländer</h1>
+    <p class="subtitle">Struktur hilft dir, Entscheidungen zu sparen.</p>
+  </header>
+
+  <main class="container">
+
+    <section class="section">
+      <h2 class="section-title"><i class="ph ph-battery-charging"></i> Der Energie-Check</h2>
+      <p class="section-intro">Wie viel "Akku" hast du heute? Wähle ehrlich deinen Zustand.</p>
+
+      <div class="bento-grid" style="margin-bottom: 20px;">
+        <button class="card energy-btn" onclick="selectEnergy('green')" data-level="green" style="text-align:center; cursor:pointer; padding: 2rem;">
+          <i class="ph ph-lightning" style="font-size: 2.5rem; color: #10b981; margin-bottom: 10px;"></i>
+          <h3 style="margin:0;">Fokus</h3>
+          <p style="margin:0; font-size:0.9rem;">Tatendrang</p>
+        </button>
+        
+        <button class="card energy-btn" onclick="selectEnergy('yellow')" data-level="yellow" style="text-align:center; cursor:pointer; padding: 2rem;">
+          <i class="ph ph-scales" style="font-size: 2.5rem; color: #f59e0b; margin-bottom: 10px;"></i>
+          <h3 style="margin:0;">Balance</h3>
+          <p style="margin:0; font-size:0.9rem;">Standard halten</p>
+        </button>
+        
+        <button class="card energy-btn" onclick="selectEnergy('red')" data-level="red" style="text-align:center; cursor:pointer; padding: 2rem;">
+          <i class="ph ph-coffee" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 10px;"></i>
+          <h3 style="margin:0;">Ruhe</h3>
+          <p style="margin:0; font-size:0.9rem;">Kraft tanken</p>
+        </button>
+      </div>
+
+      <div id="feedback-msg" style="text-align:center; color:#4ade80; opacity:0; transition:opacity 0.5s; margin-bottom:20px;">
+        <i class="ph ph-check-circle"></i> Status für heute gespeichert.
+      </div>
+
+      <div id="green-content" class="bento-grid energy-content" style="display:none;">
+        <article class="card" style="border-left: 4px solid #10b981;">
+          <h3 style="color:#10b981">Dinge wegschaffen</h3>
+          <p>Nutze die Energie für Aufgaben, die liegengeblieben sind.</p>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ 25 Min fokussiert arbeiten</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Einen Anruf erledigen</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Großen Einkauf machen</div>
+        </article>
+        <article class="card">
+          <h3>Soziales & Aktiv</h3>
+          <p>Geh raus oder triff Leute.</p>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Verabredung ausmachen</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Sport machen</div>
+        </article>
+      </div>
+
+      <div id="yellow-content" class="bento-grid energy-content" style="display:none;">
+        <article class="card" style="border-left: 4px solid #f59e0b;">
+          <h3 style="color:#f59e0b">Basis-Programm</h3>
+          <p>Nicht übertreiben, aber nicht abrutschen.</p>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Spülmaschine machen</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Duschen & anziehen</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Mails checken</div>
+        </article>
+        <article class="card">
+          <h3>Kontakt Light</h3>
+          <p>Verbindung halten ohne Anstrengung.</p>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Sprachnachricht senden</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Briefkasten leeren</div>
+        </article>
+      </div>
+
+      <div id="red-content" class="bento-grid energy-content" style="display:none;">
+        <article class="card card-warning" style="border-left: 4px solid #ef4444;">
+          <h3 style="color:#ef4444">Selbstfürsorge</h3>
+          <p>Heute ist Ruhetag. Das ist okay.</p>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Zähne putzen</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Etwas Warmes essen</div>
+          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Viel Wasser trinken</div>
+        </article>
+        <article class="card">
+          <h3>Hilfe holen?</h3>
+          <p>Wenn es nicht besser wird:</p>
+          <a href="psyche.html" class="primary-btn" style="font-size:0.9rem;">Zu den Notfall-Nummern</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i class="ph ph-sun-horizon"></i> Der Morgen-Anker</h2>
+      <p class="section-intro">Der schwerste Moment ist der Übergang vom Bett in den Tag. Wähle <strong>einen</strong> Anker.</p>
+      
+      <div style="display:flex; gap:15px; overflow-x:auto; padding-bottom:20px;">
+        <article class="card" style="min-width:250px; text-align:center;">
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-coffee"></i></div>
+          <h3>Kaffee</h3><p>"Nur Knopf drücken."</p>
+        </article>
+        <article class="card" style="min-width:250px; text-align:center;">
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-windows-logo"></i></div>
+          <h3>Luft</h3><p>Fenster aufreißen.</p>
+        </article>
+        <article class="card" style="min-width:250px; text-align:center;">
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-drop"></i></div>
+          <h3>Wasser</h3><p>Glas austrinken.</p>
+        </article>
+        <article class="card" style="min-width:250px; text-align:center;">
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-music-note"></i></div>
+          <h3>Musik</h3><p>Power-Song an.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title"><i class="ph ph-gift"></i> Vorbereitung für morgen</h2>
+      <div class="bento-grid">
+        <article class="card">
+          <h3>Bausteine wählen</h3>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+            <button class="fav-toggle" onclick="addToList('Kleidung rauslegen')">+ Kleidung</button>
+            <button class="fav-toggle" onclick="addToList('Schlüssel in Tasche')">+ Schlüssel</button>
+            <button class="fav-toggle" onclick="addToList('Handy laden')">+ Handy</button>
+            <button class="fav-toggle" onclick="addToList('Wasser ans Bett')">+ Wasser</button>
+            <button class="fav-toggle" onclick="addToList('Tasche packen')">+ Tasche</button>
+            <button class="fav-toggle" onclick="addToList('1 Priorität notieren')">+ 1 Priorität</button>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="custom-item-input" placeholder="Eigene Aufgabe..." class="login-input" style="margin:0;">
+            <button onclick="addCustomItem()" class="primary-btn" style="padding: 10px 15px;">+</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3 style="margin-bottom:20px;">Meine Routine</h3>
+          <ul id="my-evening-list" style="list-style:none; padding:0; margin:0;">
+            <li id="empty-msg" style="color:#888; font-style:italic;">Noch nichts ausgewählt.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer"><p>© 2025 Viora.</p></footer>
+
+  <script>
+    const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
+    const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
+    const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
+    const NETWORK_KEY = 'viora_MyNetwork';
+    const USER_KEY = 'viora_current_user';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadEnergyState();
+      loadEveningList();
+
+      // --- AVATAR LOGIK (Identisch zu Dashboard) ---
+      const userRaw = localStorage.getItem(USER_KEY);
+      const avatar = document.getElementById('user-profile');
+      if(userRaw && avatar) {
+        const user = JSON.parse(userRaw);
+        avatar.innerText = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+        if(localStorage.getItem(NETWORK_KEY)) {
+          avatar.classList.add('premium-gold');
+        }
+      }
+    });
+
+    // --- ENERGIE CHECK ---
+    function selectEnergy(level) {
+      const today = new Date().toLocaleDateString();
+      localStorage.setItem(STORAGE_KEY_ENERGY, level);
+      localStorage.setItem(STORAGE_KEY_DATE, today);
+      
+      updateEnergyUI(level);
+      
+      const msg = document.getElementById('feedback-msg');
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2000);
+    }
+
+    function loadEnergyState() {
+      const savedDate = localStorage.getItem(STORAGE_KEY_DATE);
+      const today = new Date().toLocaleDateString();
+      const savedLevel = localStorage.getItem(STORAGE_KEY_ENERGY);
+      if (savedDate === today && savedLevel) { updateEnergyUI(savedLevel); }
+    }
+
+    function updateEnergyUI(level) {
+      // 1. Buttons resetten
+      document.querySelectorAll('.energy-btn').forEach(btn => {
+        btn.style.borderColor = 'rgba(255,255,255,0.1)';
+        btn.style.backgroundColor = 'rgba(255,255,255,0.05)';
+      });
+      
+      // 2. Aktiven Button hervorheben
+      const activeBtn = document.querySelector(`.energy-btn[data-level="${level}"]`);
+      if(activeBtn) {
+        if(level==='green') activeBtn.style.borderColor = '#10b981';
+        if(level==='yellow') activeBtn.style.borderColor = '#f59e0b';
+        if(level==='red') activeBtn.style.borderColor = '#ef4444';
+        activeBtn.style.backgroundColor = 'rgba(255,255,255,0.1)';
+      }
+
+      // 3. Content umschalten
+      document.querySelectorAll('.energy-content').forEach(div => div.style.display = 'none');
+      const content = document.getElementById(`${level}-content`);
+      if(content) {
+        content.style.display = 'grid';
+        // Animation Trigger
+        content.style.opacity = 0;
+        setTimeout(() => content.style.opacity = 1, 50);
+      }
+    }
+
+    // --- LISTEN LOGIK ---
+    function addToList(text) {
+      const list = document.getElementById('my-evening-list');
+      const emptyMsg = document.getElementById('empty-msg');
+      if(emptyMsg) emptyMsg.style.display = 'none';
+
+      // Check ob schon da
+      let exists = false;
+      list.querySelectorAll('li span').forEach(span => { if(span.innerText === text) exists = true; });
+      if(exists) return;
+
+      const li = document.createElement('li');
+      li.style.cssText = "background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;";
+      li.innerHTML = `<span>${text}</span><button onclick="removeItem(this)" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.2rem;">&times;</button>`;
+      list.appendChild(li);
+      
+      saveList();
+    }
+
+    function addCustomItem() {
+      const val = document.getElementById('custom-item-input').value.trim();
+      if(val) { addToList(val); document.getElementById('custom-item-input').value = ''; }
+    }
+
+    function removeItem(btn) {
+      btn.parentElement.remove();
+      saveList();
+      const list = document.getElementById('my-evening-list');
+      if(list.children.length <= 1) { // 1 weil empty-msg immer da ist (versteckt)
+         document.getElementById('empty-msg').style.display = 'block';
+      }
+    }
+
+    function saveList() {
+      const items = [];
+      document.querySelectorAll('#my-evening-list li span').forEach(span => items.push(span.innerText));
+      localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(items));
+    }
+
+    function loadEveningList() {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST) || "[]");
+      if(saved.length > 0) {
+        document.getElementById('empty-msg').style.display = 'none';
+        saved.forEach(text => addToList(text));
+      }
+    }
+  </script>
+</body>
+</html>
