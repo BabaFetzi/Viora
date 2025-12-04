@@ -678,6 +678,41 @@ body.page-struktur .task-remove {
 body.page-struktur .task-remove:hover {
   color: #ff6b6b;
 }
+body.page-struktur .energy-chip {
+  width: 100%;
+  text-align: left;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  font-size: 0.95rem;
+}
+body.page-struktur .energy-chip span {
+  pointer-events: none;
+}
+body.page-struktur .energy-chip:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-1px);
+}
+body.page-struktur .energy-chip.added {
+  border-color: var(--accent-blue);
+  background: rgba(0,113,227,0.15);
+  color: #cfe2ff;
+}
+body.page-struktur .energy-chip .chip-status {
+  font-size: 0.8rem;
+  color: var(--accent-blue);
+}
+body.page-struktur .energy-chip.added .chip-status {
+  color: #4ade80;
+}
 
 /* --- Workplace --- */
 body.page-workplace .group-banner {

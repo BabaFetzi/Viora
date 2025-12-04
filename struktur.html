@@ -66,15 +66,15 @@
         <article class="card" style="border-left: 4px solid #10b981;">
           <h3 style="color:#10b981">Dinge wegschaffen</h3>
           <p>Nutze die Energie für Aufgaben, die liegengeblieben sind.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ 25 Min fokussiert arbeiten</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Einen Anruf erledigen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Großen Einkauf machen</div>
+          <button type="button" class="energy-chip" data-task="25 Min fokussiert arbeiten" onclick="addSuggestionTask(this)">⬜ 25 Min fokussiert arbeiten <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Einen Anruf erledigen" onclick="addSuggestionTask(this)">⬜ Einen Anruf erledigen <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Großen Einkauf machen" onclick="addSuggestionTask(this)">⬜ Großen Einkauf machen <span class="chip-status">+</span></button>
         </article>
         <article class="card">
           <h3>Soziales & Aktiv</h3>
           <p>Geh raus oder triff Leute.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Verabredung ausmachen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Sport machen</div>
+          <button type="button" class="energy-chip" data-task="Verabredung ausmachen" onclick="addSuggestionTask(this)">⬜ Verabredung ausmachen <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Sport machen" onclick="addSuggestionTask(this)">⬜ Sport machen <span class="chip-status">+</span></button>
         </article>
       </div>
 
@@ -82,15 +82,15 @@
         <article class="card" style="border-left: 4px solid #f59e0b;">
           <h3 style="color:#f59e0b">Basis-Programm</h3>
           <p>Nicht übertreiben, aber nicht abrutschen.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Spülmaschine machen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Duschen & anziehen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Mails checken</div>
+          <button type="button" class="energy-chip" data-task="Spülmaschine machen" onclick="addSuggestionTask(this)">⬜ Spülmaschine machen <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Duschen & anziehen" onclick="addSuggestionTask(this)">⬜ Duschen &amp; anziehen <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Mails checken" onclick="addSuggestionTask(this)">⬜ Mails checken <span class="chip-status">+</span></button>
         </article>
         <article class="card">
           <h3>Kontakt Light</h3>
           <p>Verbindung halten ohne Anstrengung.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Sprachnachricht senden</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Briefkasten leeren</div>
+          <button type="button" class="energy-chip" data-task="Sprachnachricht senden" onclick="addSuggestionTask(this)">⬜ Sprachnachricht senden <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Briefkasten leeren" onclick="addSuggestionTask(this)">⬜ Briefkasten leeren <span class="chip-status">+</span></button>
         </article>
       </div>
 
@@ -98,9 +98,9 @@
         <article class="card card-warning" style="border-left: 4px solid #ef4444;">
           <h3 style="color:#ef4444">Selbstfürsorge</h3>
           <p>Heute ist Ruhetag. Das ist okay.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Zähne putzen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Etwas Warmes essen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Viel Wasser trinken</div>
+          <button type="button" class="energy-chip" data-task="Zähne putzen" onclick="addSuggestionTask(this)">⬜ Zähne putzen <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Etwas Warmes essen" onclick="addSuggestionTask(this)">⬜ Etwas Warmes essen <span class="chip-status">+</span></button>
+          <button type="button" class="energy-chip" data-task="Viel Wasser trinken" onclick="addSuggestionTask(this)">⬜ Viel Wasser trinken <span class="chip-status">+</span></button>
         </article>
         <article class="card">
           <h3>Hilfe holen?</h3>
@@ -242,6 +242,7 @@
         content.style.opacity = 0;
         setTimeout(() => content.style.opacity = 1, 50);
       }
+      markEnergyChips();
     }
 
     // --- LISTEN LOGIK ---
@@ -285,6 +286,7 @@
           <button type="button" class="task-remove" onclick="removeItem('${task.id}')">&times;</button>
         </li>`;
       }).join('');
+      markEnergyChips();
     }
 
     function getDailyTasks() {
@@ -332,6 +334,25 @@
     function escapeHtml(text) {
       const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
       return String(text).replace(/[&<>"']/g, char => map[char]);
+    }
+
+    function addSuggestionTask(btn) {
+      const taskText = btn.dataset.task || btn.textContent;
+      addToList(taskText);
+      btn.classList.add('added');
+    }
+
+    function markEnergyChips() {
+      const tasks = getDailyTasks();
+      const titles = new Set(tasks.map(t => (t.title || '').toLowerCase()));
+      document.querySelectorAll('.energy-chip').forEach(chip => {
+        const text = (chip.dataset.task || '').toLowerCase();
+        if (text && titles.has(text)) {
+          chip.classList.add('added');
+        } else {
+          chip.classList.remove('added');
+        }
+      });
     }
   </script>
 </body>
