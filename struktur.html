@@ -5,9 +5,8 @@
   <title>Viora – Alltag</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   </head>
-<body>
+<body class="page-struktur">
 
   <nav class="sticky-nav">
     <div class="nav-container">
@@ -18,12 +17,12 @@
         <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
       </div>
       <div class="nav-links">
-        <a href="dashboard.html"><i class="ph ph-house"></i> Home</a>
-        <a href="workplace.html"><i class="ph ph-briefcase"></i> Workplace</a>
-        <a href="struktur.html" class="active-link"><i class="ph ph-calendar-check"></i> Alltag</a>
-        <a href="psyche.html"><i class="ph ph-brain"></i> Psyche</a>
-        <a href="digital.html"><i class="ph ph-desktop"></i> Digital</a>
-        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+        <a href="dashboard.html"><span class="icon" aria-hidden="true">🏠</span> Home</a>
+        <a href="workplace.html"><span class="icon" aria-hidden="true">💼</span> Workplace</a>
+        <a href="struktur.html" class="active-link"><span class="icon" aria-hidden="true">📅</span> Alltag</a>
+        <a href="psyche.html"><span class="icon" aria-hidden="true">🧠</span> Psyche</a>
+        <a href="digital.html"><span class="icon" aria-hidden="true">💻</span> Digital</a>
+        <a href="index.html" class="icon-only" aria-label="Logout"><span class="icon" aria-hidden="true">↩</span><span class="sr-only">Logout</span></a>
       </div>
     </div>
   </nav>
@@ -36,31 +35,31 @@
   <main class="container">
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-battery-charging"></i> Der Energie-Check</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">🔋</span> Der Energie-Check</h2>
       <p class="section-intro">Wie viel "Akku" hast du heute? Wähle ehrlich deinen Zustand.</p>
 
       <div class="bento-grid" style="margin-bottom: 20px;">
         <button class="card energy-btn" onclick="selectEnergy('green')" data-level="green" style="text-align:center; cursor:pointer; padding: 2rem;">
-          <i class="ph ph-lightning" style="font-size: 2.5rem; color: #10b981; margin-bottom: 10px;"></i>
+          <span class="icon" aria-hidden="true" style="font-size: 2.5rem; color: #10b981; margin-bottom: 10px;">⚡</span>
           <h3 style="margin:0;">Fokus</h3>
           <p style="margin:0; font-size:0.9rem;">Tatendrang</p>
         </button>
         
         <button class="card energy-btn" onclick="selectEnergy('yellow')" data-level="yellow" style="text-align:center; cursor:pointer; padding: 2rem;">
-          <i class="ph ph-scales" style="font-size: 2.5rem; color: #f59e0b; margin-bottom: 10px;"></i>
+          <span class="icon" aria-hidden="true" style="font-size: 2.5rem; color: #f59e0b; margin-bottom: 10px;">⚖️</span>
           <h3 style="margin:0;">Balance</h3>
           <p style="margin:0; font-size:0.9rem;">Standard halten</p>
         </button>
         
         <button class="card energy-btn" onclick="selectEnergy('red')" data-level="red" style="text-align:center; cursor:pointer; padding: 2rem;">
-          <i class="ph ph-coffee" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 10px;"></i>
+          <span class="icon" aria-hidden="true" style="font-size: 2.5rem; color: #ef4444; margin-bottom: 10px;">☕</span>
           <h3 style="margin:0;">Ruhe</h3>
           <p style="margin:0; font-size:0.9rem;">Kraft tanken</p>
         </button>
       </div>
 
       <div id="feedback-msg" style="text-align:center; color:#4ade80; opacity:0; transition:opacity 0.5s; margin-bottom:20px;">
-        <i class="ph ph-check-circle"></i> Status für heute gespeichert.
+        <span class="icon" aria-hidden="true">✔️</span> Status für heute gespeichert.
       </div>
 
       <div id="green-content" class="bento-grid energy-content" style="display:none;">
@@ -112,31 +111,31 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-sun-horizon"></i> Der Morgen-Anker</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">🌅</span> Der Morgen-Anker</h2>
       <p class="section-intro">Der schwerste Moment ist der Übergang vom Bett in den Tag. Wähle <strong>einen</strong> Anker.</p>
       
       <div style="display:flex; gap:15px; overflow-x:auto; padding-bottom:20px;">
         <article class="card" style="min-width:250px; text-align:center;">
-          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-coffee"></i></div>
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><span class="icon" aria-hidden="true">☕</span></div>
           <h3>Kaffee</h3><p>"Nur Knopf drücken."</p>
         </article>
         <article class="card" style="min-width:250px; text-align:center;">
-          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-windows-logo"></i></div>
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><span class="icon" aria-hidden="true">🪟</span></div>
           <h3>Luft</h3><p>Fenster aufreißen.</p>
         </article>
         <article class="card" style="min-width:250px; text-align:center;">
-          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-drop"></i></div>
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><span class="icon" aria-hidden="true">💧</span></div>
           <h3>Wasser</h3><p>Glas austrinken.</p>
         </article>
         <article class="card" style="min-width:250px; text-align:center;">
-          <div class="icon-placeholder" style="margin:0 auto 15px;"><i class="ph ph-music-note"></i></div>
+          <div class="icon-placeholder" style="margin:0 auto 15px;"><span class="icon" aria-hidden="true">🎵</span></div>
           <h3>Musik</h3><p>Power-Song an.</p>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-gift"></i> Vorbereitung für morgen</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">🎁</span> Vorbereitung für morgen</h2>
       <div class="bento-grid">
         <article class="card">
           <h3>Bausteine wählen</h3>

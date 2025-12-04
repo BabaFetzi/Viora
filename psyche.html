@@ -5,33 +5,8 @@
   <title>Viora – Psyche</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <style>
-    /* CSS (Identisch) */
-    .breathing-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; background: rgba(0,0,0,0.3); border-radius: var(--radius-l); border: 1px solid var(--card-border); position: relative; overflow: hidden; }
-    .breath-circle { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-blue), #60a5fa); box-shadow: 0 0 30px rgba(41, 151, 255, 0.4); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-size: 1.1rem; transition: all 0.3s ease; animation: breatheAnimation 8s infinite ease-in-out paused; opacity: 0.8; z-index: 2; }
-    .breathing-container::before { content: ''; position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(41, 151, 255, 0.1) 0%, rgba(0,0,0,0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
-    .breath-instruction { margin-top: 2rem; font-size: 1.2rem; color: var(--text-main); min-height: 1.5em; text-align: center; font-weight: 500; }
-    @keyframes breatheAnimation { 0% { transform: scale(1); opacity: 0.8; } 40% { transform: scale(1.8); opacity: 0.5; } 60% { transform: scale(1.8); opacity: 0.5; } 100% { transform: scale(1); opacity: 0.8; } }
-    .start-breath-btn { margin-top: 20px; background: rgba(255,255,255,0.1); border: 1px solid var(--text-muted); color: var(--text-main); padding: 10px 24px; border-radius: 20px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
-    .start-breath-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
-    .thought-container { position: relative; padding: 30px; min-height: 250px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-    .thought-input-group { display: flex; gap: 10px; z-index: 10; position: relative; }
-    .thought-input { flex: 1; padding: 12px; border-radius: 12px; border: 1px solid var(--card-border); background: rgba(0,0,0,0.5); color: #fff; font-family: var(--font-stack); }
-    .thought-bubble { position: absolute; background: rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 20px; color: var(--text-muted); pointer-events: none; animation: floatAway 3s forwards ease-in; top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; font-size: 0.9rem; backdrop-filter: blur(4px); }
-    @keyframes floatAway { 0% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -200px) scale(0.2) rotate(20deg); } }
-    .finger-check-grid { display: grid; gap: 15px; }
-    .finger-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-m); padding: 15px 20px; cursor: pointer; transition: background 0.2s; }
-    .finger-card:hover { background: rgba(255,255,255,0.08); }
-    .finger-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--text-main); }
-    .finger-content { display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); font-size: 0.9rem; animation: fadeIn 0.3s; line-height: 1.5; }
-    .finger-card.open .finger-content { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-    .emergency-btn { display: inline-block; width: 100%; text-align: center; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: auto; transition: opacity 0.2s; }
-    .emergency-btn:hover { opacity: 0.9; }
-  </style>
 </head>
-<body>
+<body class="page-psyche">
 
   <nav class="sticky-nav">
     <div class="nav-container">
@@ -40,12 +15,12 @@
         <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
       </div>
       <div class="nav-links">
-        <a href="dashboard.html"><i class="ph ph-house"></i> Home</a>
-        <a href="workplace.html"><i class="ph ph-briefcase"></i> Workplace</a>
-        <a href="struktur.html"><i class="ph ph-calendar-check"></i> Alltag</a>
-        <a href="psyche.html" class="active-link"><i class="ph ph-brain"></i> Psyche</a>
-        <a href="digital.html"><i class="ph ph-desktop"></i> Digital</a>
-        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+        <a href="dashboard.html"><span class="icon" aria-hidden="true">🏠</span> Home</a>
+        <a href="workplace.html"><span class="icon" aria-hidden="true">💼</span> Workplace</a>
+        <a href="struktur.html"><span class="icon" aria-hidden="true">📅</span> Alltag</a>
+        <a href="psyche.html" class="active-link"><span class="icon" aria-hidden="true">🧠</span> Psyche</a>
+        <a href="digital.html"><span class="icon" aria-hidden="true">💻</span> Digital</a>
+        <a href="index.html" class="icon-only" aria-label="Logout"><span class="icon" aria-hidden="true">↩</span><span class="sr-only">Logout</span></a>
       </div>
     </div>
   </nav>
@@ -58,7 +33,7 @@
   <main class="container">
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-heartbeat"></i> Die Notbremse</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">❤️</span> Die Notbremse</h2>
       <div class="breathing-container">
         <div class="breath-circle" id="breath-circle"><span id="breath-text">Bereit?</span></div>
         <div class="breath-instruction" id="breath-instruction">Klicke auf Start.</div>
@@ -67,18 +42,18 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-hand-palm"></i> 5-Finger-Check</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">✋</span> 5-Finger-Check</h2>
       <div class="bento-grid">
-        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><i class="ph ph-person-simple-run"></i> Körper</span><span>▼</span></div><div class="finger-content">Wie fühlt sich mein Körper an?</div></div>
-        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><i class="ph ph-heart"></i> Gefühl</span><span>▼</span></div><div class="finger-content">Welches Gefühl ist da?</div></div>
-        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><i class="ph ph-lightbulb"></i> Gedanken</span><span>▼</span></div><div class="finger-content">Was denke ich gerade?</div></div>
-        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><i class="ph ph-house-line"></i> Umfeld</span><span>▼</span></div><div class="finger-content">Was brauche ich von außen?</div></div>
-        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><i class="ph ph-footprints"></i> Schritt</span><span>▼</span></div><div class="finger-content">Was ist der kleinste Schritt jetzt?</div></div>
+        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><span class="icon" aria-hidden="true">🏃</span> Körper</span><span>▼</span></div><div class="finger-content">Wie fühlt sich mein Körper an?</div></div>
+        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><span class="icon" aria-hidden="true">💗</span> Gefühl</span><span>▼</span></div><div class="finger-content">Welches Gefühl ist da?</div></div>
+        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><span class="icon" aria-hidden="true">💡</span> Gedanken</span><span>▼</span></div><div class="finger-content">Was denke ich gerade?</div></div>
+        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><span class="icon" aria-hidden="true">🏡</span> Umfeld</span><span>▼</span></div><div class="finger-content">Was brauche ich von außen?</div></div>
+        <div class="card finger-card" onclick="toggleFinger(this)"><div class="finger-header"><span><span class="icon" aria-hidden="true">👣</span> Schritt</span><span>▼</span></div><div class="finger-content">Was ist der kleinste Schritt jetzt?</div></div>
       </div>
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-trash"></i> Gedanken loslassen</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">🗑️</span> Gedanken loslassen</h2>
       <div class="bento-grid">
         <article class="card wide thought-container">
           <div style="text-align: center; margin-bottom: 20px; z-index: 5;"><h3>Was belastet dich?</h3></div>
@@ -92,7 +67,7 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-phone"></i> Wichtige Kontakte</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">📞</span> Wichtige Kontakte</h2>
       <div class="bento-grid">
         <article class="card card-warning"><h3>Dargebotene Hand</h3><a href="tel:143" class="emergency-btn" style="background: #fff; color: #000;">📞 143 anrufen</a></article>
         <article class="card"><h3>Ambulanz</h3><a href="tel:144" class="emergency-btn" style="background: #ef4444; color: #fff;">📞 144 anrufen</a></article>

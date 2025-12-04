@@ -5,33 +5,8 @@
   <title>Viora – Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <style>
-    /* (Styles wie gehabt) */
-    .chart-container { display: flex; align-items: flex-end; justify-content: space-between; height: 160px; padding-top: 20px; gap: 12px; }
-    .chart-bar-wrapper { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
-    .chart-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height 1s ease; opacity: 0.5; position: relative; }
-    .chart-bar.active-day { opacity: 1; box-shadow: 0 0 15px rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.4); }
-    .chart-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; font-weight: 600; }
-    .active-day .chart-label { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
-    .bar-green { background: #10b981; } .bar-yellow { background: #f59e0b; } .bar-red { background: #ef4444; } .bar-grey { background: rgba(255,255,255,0.1); } 
-    .today-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-    @media (min-width: 600px) { .today-grid { grid-template-columns: 1fr 1fr; } }
-    .status-box { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; border-left: 4px solid transparent; }
-    .status-box.needed { border-left-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-    .status-box.done-green { border-left-color: #10b981; }
-    .status-box.done-yellow { border-left-color: #f59e0b; }
-    .status-box.done-red { border-left-color: #ef4444; }
-    .reminder-btn { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; font-size: 0.85rem; animation: pulse 2s infinite; }
-    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-    .mini-task-list { list-style: none; padding: 0; margin: 0; }
-    .mini-task-list li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
-    .mini-task-list li:last-child { border-bottom: none; }
-    .task-source-coach { color: #f59e0b; font-weight: bold; font-size: 0.7rem; border: 1px solid #f59e0b; padding: 1px 4px; border-radius: 4px; margin-right: 8px; }
-    .empty-tasks { font-style: italic; color: var(--text-muted); font-size: 0.85rem; }
-  </style>
 </head>
-<body>
+<body class="page-dashboard">
 
   <nav class="sticky-nav">
     <div class="nav-container">
@@ -42,12 +17,12 @@
         <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
       </div>
       <div class="nav-links">
-        <a href="dashboard.html" class="active-link"><i class="ph ph-house"></i> Home</a>
-        <a href="workplace.html"><i class="ph ph-briefcase"></i> Workplace</a>
-        <a href="struktur.html"><i class="ph ph-calendar-check"></i> Alltag</a>
-        <a href="psyche.html"><i class="ph ph-brain"></i> Psyche</a>
-        <a href="digital.html"><i class="ph ph-desktop"></i> Digital</a>
-        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+        <a href="dashboard.html" class="active-link"><span class="icon" aria-hidden="true">🏠</span> Home</a>
+        <a href="workplace.html"><span class="icon" aria-hidden="true">💼</span> Workplace</a>
+        <a href="struktur.html"><span class="icon" aria-hidden="true">📅</span> Alltag</a>
+        <a href="psyche.html"><span class="icon" aria-hidden="true">🧠</span> Psyche</a>
+        <a href="digital.html"><span class="icon" aria-hidden="true">💻</span> Digital</a>
+        <a href="index.html" class="icon-only" aria-label="Logout"><span class="icon" aria-hidden="true">↩</span><span class="sr-only">Logout</span></a>
       </div>
     </div>
   </nav>
@@ -219,14 +194,26 @@
       let jsDay = new Date().getDay(); let uiDayIndex = jsDay === 0 ? 6 : jsDay - 1;
 
       days.forEach((day, index) => {
-        let cls = 'bar-grey'; let h = '15%';
-        if (index < uiDayIndex) { const h = ['bar-yellow', 'bar-green', 'bar-yellow'][index % 3]; barClass = h; height = '60%'; }
-        if (index === uiDayIndex && hasData) {
-           if(level === 'green') { cls = 'bar-green'; h = '90%'; }
-           if(level === 'yellow') { cls = 'bar-yellow'; h = '55%'; }
-           if(level === 'red') { cls = 'bar-red'; h = '30%'; }
+        let barClass = 'bar-grey';
+        let height = '15%';
+        if (index < uiDayIndex) {
+          const presets = ['bar-yellow', 'bar-green', 'bar-yellow'];
+          barClass = presets[index % presets.length];
+          height = '60%';
         }
-        container.innerHTML += `<div class="chart-bar-wrapper"><div class="chart-bar ${cls} ${index===uiDayIndex?'active-day':''}" style="height:${h};"></div><span class="chart-label">${day}</span></div>`;
+        if (index === uiDayIndex) {
+          if (hasData) {
+            if(level === 'green') { barClass = 'bar-green'; height = '90%'; }
+            if(level === 'yellow') { barClass = 'bar-yellow'; height = '55%'; }
+            if(level === 'red') { barClass = 'bar-red'; height = '30%'; }
+          } else {
+            height = '30%';
+          }
+        }
+        const isActiveDay = index === uiDayIndex && hasData;
+        const wrapperClass = `chart-bar-wrapper${isActiveDay ? ' active-day' : ''}`;
+        const barActiveClass = isActiveDay ? 'active-day' : '';
+        container.innerHTML += `<div class="${wrapperClass}"><div class="chart-bar ${barClass} ${barActiveClass}" style="height:${height};"></div><span class="chart-label">${day}</span></div>`;
       });
     }
 

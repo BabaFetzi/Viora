@@ -5,41 +5,8 @@
   <title>Viora – Digital</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <style>
-    /* (CSS Identisch) */
-    .vocab-grid { display: grid; gap: 15px; }
-    .vocab-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-m); padding: 15px 20px; cursor: pointer; transition: background 0.2s; }
-    .vocab-card:hover { background: rgba(255,255,255,0.08); }
-    .vocab-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--accent-blue); }
-    .vocab-content { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
-    .vocab-card.open .vocab-content { display: block; animation: fadeIn 0.3s; }
-    .email-sim-container { background: #fff; color: #333; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
-    .email-header { background: #f0f0f0; padding: 10px 15px; border-bottom: 1px solid #ccc; display: flex; gap: 10px; align-items: center; }
-    .fake-btn { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-    .email-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-    .email-input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: sans-serif; }
-    .email-textarea { width: 100%; min-height: 150px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; font-family: sans-serif; }
-    .sim-btn { background: var(--accent-blue); color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 600; align-self: flex-start; }
-    .sim-btn:hover { opacity: 0.9; }
-    .feedback-box { margin-top: 15px; padding: 15px; border-radius: var(--radius-m); display: none; }
-    .feedback-success { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; }
-    .feedback-error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; }
-    .pw-container { position: relative; }
-    .pw-input { width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); color: #fff; border-radius: 12px; font-family: monospace; font-size: 1.1rem; }
-    .pw-bar-bg { height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 10px; overflow: hidden; }
-    .pw-bar-fill { height: 100%; width: 0%; background: #ef4444; transition: width 0.3s, background 0.3s; }
-    .pw-text { font-size: 0.85rem; margin-top: 8px; color: var(--text-muted); }
-    .ki-builder { display: flex; flex-direction: column; gap: 15px; }
-    .ki-step { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--card-border); }
-    .ki-step label { display: block; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px; }
-    .ki-select, .ki-text-input { width: 100%; padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--card-border); color: #fff; font-size: 1rem; }
-    .ki-result-box { margin-top: 20px; background: linear-gradient(135deg, rgba(41, 151, 255, 0.1), rgba(0,0,0,0)); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 20px; display: none; animation: fadeIn 0.5s; }
-    .ki-prompt-code { display: block; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; font-family: monospace; margin: 10px 0; border-left: 3px solid var(--accent-blue); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
 </head>
-<body>
+<body class="page-digital">
 
   <nav class="sticky-nav">
     <div class="nav-container">
@@ -48,12 +15,12 @@
         <div id="user-profile" class="profile-avatar" title="Dein Profil">U</div>
       </div>
       <div class="nav-links">
-        <a href="dashboard.html"><i class="ph ph-house"></i> Home</a>
-        <a href="workplace.html"><i class="ph ph-briefcase"></i> Workplace</a>
-        <a href="struktur.html"><i class="ph ph-calendar-check"></i> Alltag</a>
-        <a href="psyche.html"><i class="ph ph-brain"></i> Psyche</a>
-        <a href="digital.html" class="active-link"><i class="ph ph-desktop"></i> Digital</a>
-        <a href="index.html"><i class="ph ph-sign-out"></i></a>
+        <a href="dashboard.html"><span class="icon" aria-hidden="true">🏠</span> Home</a>
+        <a href="workplace.html"><span class="icon" aria-hidden="true">💼</span> Workplace</a>
+        <a href="struktur.html"><span class="icon" aria-hidden="true">📅</span> Alltag</a>
+        <a href="psyche.html"><span class="icon" aria-hidden="true">🧠</span> Psyche</a>
+        <a href="digital.html" class="active-link"><span class="icon" aria-hidden="true">💻</span> Digital</a>
+        <a href="index.html" class="icon-only" aria-label="Logout"><span class="icon" aria-hidden="true">↩</span><span class="sr-only">Logout</span></a>
       </div>
     </div>
   </nav>
@@ -66,7 +33,7 @@
   <main class="container">
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-book-bookmark"></i> Begriffe</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">📘</span> Begriffe</h2>
       <div class="bento-grid">
         <div class="vocab-card" onclick="toggleVocab(this)"><div class="vocab-header">🌐 Browser</div><div class="vocab-content"><p>Wie ein Auto.</p></div></div>
         <div class="vocab-card" onclick="toggleVocab(this)"><div class="vocab-header">☁️ Cloud</div><div class="vocab-content"><p>Miet-Lagerraum.</p></div></div>
@@ -75,7 +42,7 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-envelope"></i> E-Mail Simulator</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">✉️</span> E-Mail Simulator</h2>
       <div class="card wide" style="background: #d1d5db; color: #000;"> 
         <div class="email-sim-container">
           <div class="email-header"><span class="fake-btn" style="background:#ff5f57"></span><span class="fake-btn" style="background:#febc2e"></span><span class="fake-btn" style="background:#28c840"></span><span style="margin-left: 10px; font-size: 0.8rem; color: #666;">Neue Nachricht</span></div>
@@ -91,7 +58,7 @@
     </section>
 
     <section class="section">
-      <h2 class="section-title"><i class="ph ph-lock-key"></i> Sicherheits-Check</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">🔐</span> Sicherheits-Check</h2>
       <div class="bento-grid">
         <article class="card">
           <h3>Passwort testen</h3>
@@ -105,7 +72,7 @@
     </section>
 
     <section class="section" id="ki">
-      <h2 class="section-title"><i class="ph ph-robot"></i> KI Baukasten</h2>
+      <h2 class="section-title"><span class="icon" aria-hidden="true">🤖</span> KI Baukasten</h2>
       <div class="bento-grid">
         <article class="card wide">
           <h3>🤖 Der Befehls-Baukasten</h3>
@@ -151,7 +118,7 @@
 
     function showToast(msg) {
       const toast = document.createElement('div'); toast.className = 'toast';
-      toast.innerHTML = `<i class="ph ph-check-circle"></i> ${msg}`;
+      toast.innerHTML = `<span class="icon" aria-hidden="true">✔️</span> ${msg}`;
       document.body.appendChild(toast);
       setTimeout(() => toast.classList.add('show'), 100);
       setTimeout(() => { toast.classList.remove('show'); setTimeout(()=>toast.remove(),300); }, 3000);
