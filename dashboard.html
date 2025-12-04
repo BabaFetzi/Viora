@@ -120,7 +120,8 @@
     const STORAGE_KEY_FAVS = 'einfachErklaertFavorites';
     const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
     const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
-    const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
+    const STORAGE_KEY_TASKS = 'viora_home_tasks';
+    const LEGACY_KEY_LIST = 'einfachErklaert_EveningList';
     const DB_KEY = 'einfachErklaert_SharedDB';
     const NETWORK_KEY = 'viora_MyNetwork';
     const USER_KEY = 'viora_current_user'; // WICHTIG
@@ -145,6 +146,13 @@
         if(localStorage.getItem(NETWORK_KEY)) {
           avatar.classList.add('premium-gold');
         }
+      }
+    });
+
+    window.addEventListener('vioraTasksUpdated', renderDashboardData);
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEY_TASKS) {
+        renderDashboardData();
       }
     });
 
@@ -175,14 +183,21 @@
       if (myCode) {
         const db = JSON.parse(localStorage.getItem(DB_KEY) || '{"tasks":[]}');
         const myTasks = db.tasks ? db.tasks.filter(t => t.group === myCode || t.group === 'all') : [];
-        myTasks.slice().reverse().slice(0,3).forEach(t => { coachHTML += `<li><span class="task-source-coach">COACH</span> ${t.title}</li>`; });
+        myTasks.slice().reverse().slice(0,3).forEach(t => {
+          const safeTitle = escapeHtml(t.title || '');
+          coachHTML += `<li><span class="task-source-coach">COACH</span> ${safeTitle}</li>`;
+        });
       }
 
-      const ownTasks = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST) || "[]");
-      let ownHTML = ownTasks.slice(0,3).map(t => `<li>• ${t}</li>`).join('');
+      const ownTasks = getDailyTasks();
+      const ownHTML = renderOwnTasksList(ownTasks);
 
-      if (!coachHTML && !ownHTML) taskListEl.innerHTML = `<li class="empty-tasks">Keine Aufgaben offen.</li>`;
-      else taskListEl.innerHTML = coachHTML + ownHTML;
+      if (!coachHTML && !ownHTML) {
+        taskListEl.innerHTML = `<li class="empty-tasks">Keine Aufgaben offen.</li>`;
+      } else {
+        taskListEl.innerHTML = coachHTML + ownHTML;
+        if (ownHTML) attachHomeTaskListeners();
+      }
 
       renderChart(hasEntryForToday, savedLevel);
     }
@@ -215,6 +230,72 @@
         const barActiveClass = isActiveDay ? 'active-day' : '';
         container.innerHTML += `<div class="${wrapperClass}"><div class="chart-bar ${barClass} ${barActiveClass}" style="height:${height};"></div><span class="chart-label">${day}</span></div>`;
       });
+    }
+
+    function getDailyTasks() {
+      const raw = localStorage.getItem(STORAGE_KEY_TASKS);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return parsed;
+        } catch (err) {
+          console.warn('Kann Aufgaben nicht lesen', err);
+        }
+      }
+
+      const legacyRaw = localStorage.getItem(LEGACY_KEY_LIST);
+      if (legacyRaw) {
+        try {
+          const legacyList = JSON.parse(legacyRaw);
+          if (Array.isArray(legacyList) && legacyList.length) {
+            const migrated = legacyList.map((title, idx) => ({
+              id: `legacy-${idx}-${Date.now()}`,
+              title,
+              done: false
+            }));
+            saveDailyTasks(migrated);
+            localStorage.removeItem(LEGACY_KEY_LIST);
+            return migrated;
+          }
+        } catch (err) {
+          console.warn('Kann alte Liste nicht migrieren', err);
+        }
+      }
+      return [];
+    }
+
+    function saveDailyTasks(tasks) {
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
+      window.dispatchEvent(new Event('vioraTasksUpdated'));
+    }
+
+    function renderOwnTasksList(tasks) {
+      if (!tasks.length) return '';
+      return tasks.slice(0,3).map(task => {
+        const checked = task.done ? 'checked' : '';
+        const doneClass = task.done ? 'task-done' : '';
+        const safeTitle = escapeHtml(task.title || '');
+        return `<li class="home-task"><label><input type="checkbox" class="home-task-toggle" data-task-id="${task.id}" ${checked}><span class="${doneClass}">${safeTitle}</span></label></li>`;
+      }).join('');
+    }
+
+    function attachHomeTaskListeners() {
+      document.querySelectorAll('.home-task-toggle').forEach(input => {
+        input.addEventListener('change', (event) => {
+          const taskId = event.target.dataset.taskId;
+          const tasks = getDailyTasks();
+          const task = tasks.find(t => t.id === taskId);
+          if (task) {
+            task.done = event.target.checked;
+            saveDailyTasks(tasks);
+          }
+        }, { once: true });
+      });
+    }
+
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+      return String(text).replace(/[&<>"']/g, char => map[char]);
     }
 
     function renderFavs() { 

@@ -309,6 +309,22 @@ body.page-dashboard .empty-tasks {
   color: var(--text-muted);
   font-size: 0.85rem;
 }
+body.page-dashboard .home-task label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  cursor: pointer;
+}
+body.page-dashboard .home-task input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-blue);
+}
+body.page-dashboard .home-task span.task-done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
 
 /* --- Digital --- */
 body.page-digital .vocab-grid { display: grid; gap: 15px; }
@@ -623,6 +639,45 @@ body.page-psyche .emergency-btn {
   transition: opacity 0.2s;
 }
 body.page-psyche .emergency-btn:hover { opacity: 0.9; }
+
+/* --- Struktur & Alltag --- */
+body.page-struktur #my-evening-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+body.page-struktur .evening-task {
+  background: rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+body.page-struktur .evening-task span {
+  flex: 1;
+}
+body.page-struktur .evening-task span.task-done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+body.page-struktur .evening-task.task-done {
+  opacity: 0.8;
+}
+body.page-struktur .task-remove {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0 4px;
+}
+body.page-struktur .task-remove:hover {
+  color: #ff6b6b;
+}
 
 /* --- Workplace --- */
 body.page-workplace .group-banner {

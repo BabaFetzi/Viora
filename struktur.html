@@ -156,7 +156,7 @@
         <article class="card">
           <h3 style="margin-bottom:20px;">Meine Routine</h3>
           <ul id="my-evening-list" style="list-style:none; padding:0; margin:0;">
-            <li id="empty-msg" style="color:#888; font-style:italic;">Noch nichts ausgewählt.</li>
+            <li class="empty-msg" style="color:#888; font-style:italic;">Noch nichts ausgewählt.</li>
           </ul>
         </article>
       </div>
@@ -169,13 +169,14 @@
   <script>
     const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
     const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
-    const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
+    const STORAGE_KEY_TASKS = 'viora_home_tasks';
+    const LEGACY_KEY_LIST = 'einfachErklaert_EveningList';
     const NETWORK_KEY = 'viora_MyNetwork';
     const USER_KEY = 'viora_current_user';
 
     document.addEventListener('DOMContentLoaded', () => {
       loadEnergyState();
-      loadEveningList();
+      renderTaskList();
 
       // --- AVATAR LOGIK (Identisch zu Dashboard) ---
       const userRaw = localStorage.getItem(USER_KEY);
@@ -186,6 +187,13 @@
         if(localStorage.getItem(NETWORK_KEY)) {
           avatar.classList.add('premium-gold');
         }
+      }
+    });
+
+    window.addEventListener('vioraTasksUpdated', renderTaskList);
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEY_TASKS) {
+        renderTaskList();
       }
     });
 
@@ -238,49 +246,92 @@
 
     // --- LISTEN LOGIK ---
     function addToList(text) {
-      const list = document.getElementById('my-evening-list');
-      const emptyMsg = document.getElementById('empty-msg');
-      if(emptyMsg) emptyMsg.style.display = 'none';
-
-      // Check ob schon da
-      let exists = false;
-      list.querySelectorAll('li span').forEach(span => { if(span.innerText === text) exists = true; });
-      if(exists) return;
-
-      const li = document.createElement('li');
-      li.style.cssText = "background:rgba(255,255,255,0.05); padding:12px; border-radius:8px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;";
-      li.innerHTML = `<span>${text}</span><button onclick="removeItem(this)" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.2rem;">&times;</button>`;
-      list.appendChild(li);
-      
-      saveList();
+      const value = (text || '').trim();
+      if(!value) return;
+      const tasks = getDailyTasks();
+      const exists = tasks.some(task => task.title.toLowerCase() === value.toLowerCase());
+      if (exists) return;
+      tasks.push({ id: generateTaskId(), title: value, done: false, createdAt: Date.now() });
+      saveDailyTasks(tasks);
     }
 
     function addCustomItem() {
-      const val = document.getElementById('custom-item-input').value.trim();
-      if(val) { addToList(val); document.getElementById('custom-item-input').value = ''; }
+      const input = document.getElementById('custom-item-input');
+      const val = input.value.trim();
+      if(val) {
+        addToList(val);
+        input.value = '';
+      }
     }
 
-    function removeItem(btn) {
-      btn.parentElement.remove();
-      saveList();
+    function removeItem(taskId) {
+      const tasks = getDailyTasks().filter(task => task.id !== taskId);
+      saveDailyTasks(tasks);
+    }
+
+    function renderTaskList() {
       const list = document.getElementById('my-evening-list');
-      if(list.children.length <= 1) { // 1 weil empty-msg immer da ist (versteckt)
-         document.getElementById('empty-msg').style.display = 'block';
+      const tasks = getDailyTasks();
+      if (!list) return;
+      if (tasks.length === 0) {
+        list.innerHTML = `<li class="empty-msg">Noch nichts ausgewählt.</li>`;
+        return;
+      }
+      list.innerHTML = tasks.map(task => {
+        const doneClass = task.done ? 'task-done' : '';
+        const safeTitle = escapeHtml(task.title);
+        return `<li class="evening-task${task.done ? ' task-done' : ''}" data-task-id="${task.id}">
+          <span class="${doneClass}">${safeTitle}</span>
+          <button type="button" class="task-remove" onclick="removeItem('${task.id}')">&times;</button>
+        </li>`;
+      }).join('');
+    }
+
+    function getDailyTasks() {
+      const raw = localStorage.getItem(STORAGE_KEY_TASKS);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return parsed;
+        } catch (err) {
+          console.warn('Aufgaben konnten nicht geladen werden', err);
+        }
+      }
+      const legacyRaw = localStorage.getItem(LEGACY_KEY_LIST);
+      if (legacyRaw) {
+        try {
+          const legacyList = JSON.parse(legacyRaw);
+          if (Array.isArray(legacyList) && legacyList.length) {
+            const migrated = legacyList.map((title, idx) => ({
+              id: `legacy-${idx}-${Date.now()}`,
+              title,
+              done: false
+            }));
+            saveDailyTasks(migrated, true);
+            localStorage.removeItem(LEGACY_KEY_LIST);
+            return migrated;
+          }
+        } catch (err) {
+          console.warn('Migration fehlgeschlagen', err);
+        }
+      }
+      return [];
+    }
+
+    function saveDailyTasks(tasks, silent = false) {
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
+      if (!silent) {
+        window.dispatchEvent(new Event('vioraTasksUpdated'));
       }
     }
 
-    function saveList() {
-      const items = [];
-      document.querySelectorAll('#my-evening-list li span').forEach(span => items.push(span.innerText));
-      localStorage.setItem(STORAGE_KEY_LIST, JSON.stringify(items));
+    function generateTaskId() {
+      return `task-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
     }
 
-    function loadEveningList() {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST) || "[]");
-      if(saved.length > 0) {
-        document.getElementById('empty-msg').style.display = 'none';
-        saved.forEach(text => addToList(text));
-      }
+    function escapeHtml(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+      return String(text).replace(/[&<>"']/g, char => map[char]);
     }
   </script>
 </body>
