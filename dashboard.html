@@ -84,7 +84,7 @@
             </div>
             <div style="padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.1);">
               <h4 style="margin:0 0 10px 0; font-size:1rem; color:var(--accent-blue);">Deine Aufgaben</h4>
-              <ul class="mini-task-list" id="today-tasks"><li class="empty-tasks">Lade Aufgaben...</li></ul>
+              <ul class="mini-task-list" id="list-workplace"><li class="empty-tasks">Lade Aufgaben...</li></ul>
               <div style="margin-top:15px; text-align:right;">
                 <a href="workplace.html" style="font-size:0.75rem; color:var(--text-muted); text-decoration:none; margin-right:10px;">Zum Workplace</a>
                 <a href="struktur.html" style="font-size:0.75rem; color:var(--text-muted); text-decoration:none;">Eigene Liste</a>
@@ -146,7 +146,7 @@
     const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
     const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
     const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
-    const DB_KEY = 'einfachErklaert_SharedDB';
+    const DB_KEY = 'VIORA_DB';
     const NETWORK_KEY = 'viora_MyNetwork';
     const USER_KEY = 'viora_current_user'; // WICHTIG
 
@@ -155,16 +155,30 @@
     document.addEventListener('DOMContentLoaded', () => {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
       document.getElementById('current-date').innerText = new Date().toLocaleDateString('de-DE', options);
-      
+
+      // Nutzer ermitteln und ggf. Gruppen-Code setzen
+      const userRaw = localStorage.getItem(USER_KEY);
+      let currentUser = null;
+      if (userRaw) {
+        try {
+          currentUser = JSON.parse(userRaw);
+        } catch (err) {
+          console.warn('USER_KEY parsing failed', err);
+        }
+      }
+      const normalizedUsername = currentUser?.username ? currentUser.username.toLowerCase() : '';
+      if (normalizedUsername && (normalizedUsername === 'anna' || normalizedUsername === 'ben')) {
+        localStorage.setItem(NETWORK_KEY, 'WERK-01');
+      }
+
       renderFavs();
       renderDashboardData();
       
       // AVATAR LOGIK
-      const userRaw = localStorage.getItem(USER_KEY);
       const avatar = document.getElementById('user-profile');
-      if(userRaw && avatar) {
-        const user = JSON.parse(userRaw);
-        avatar.innerText = user.name.charAt(0).toUpperCase();
+      if(currentUser && avatar) {
+        const displayName = currentUser.name || currentUser.username || 'U';
+        avatar.innerText = displayName.charAt(0).toUpperCase();
         
         // Check Premium (Netzwerk Code vorhanden?)
         if(localStorage.getItem(NETWORK_KEY)) {
@@ -192,22 +206,43 @@
         statusContainer.innerHTML = `<div style="text-align:center;"><p style="margin-bottom:5px; font-weight:600; color:#ef4444;">Check ausstehend!</p><a href="struktur.html" class="reminder-btn">⚠️ Energie prüfen</a></div>`;
       }
 
-      const taskListEl = document.getElementById('today-tasks');
-      taskListEl.innerHTML = '';
-      let coachHTML = '';
-      const myCode = localStorage.getItem(NETWORK_KEY);
-      
-      if (myCode) {
-        const db = JSON.parse(localStorage.getItem(DB_KEY) || '{"tasks":[]}');
-        const myTasks = db.tasks ? db.tasks.filter(t => t.group === myCode || t.group === 'all') : [];
-        myTasks.slice().reverse().slice(0,3).forEach(t => { coachHTML += `<li><span class="task-source-coach">COACH</span> ${t.title}</li>`; });
+      const taskListEl = document.getElementById('list-workplace');
+      if (taskListEl) {
+        taskListEl.innerHTML = '';
+        const networkCode = localStorage.getItem(NETWORK_KEY);
+        let coachTasks = [];
+        if (networkCode) {
+          const dbRaw = localStorage.getItem(DB_KEY);
+          if (dbRaw) {
+            try {
+              const parsedDB = JSON.parse(dbRaw);
+              const allTasks = Array.isArray(parsedDB?.tasks) ? parsedDB.tasks : [];
+              coachTasks = allTasks.filter(task => task && task.group === networkCode);
+            } catch (err) {
+              console.warn('Failed to parse coach DB', err);
+            }
+          }
+        }
+
+        const coachHTML = coachTasks.length
+          ? coachTasks.slice().reverse().slice(0,3).map(t => `<li><span class="task-source-coach">COACH</span> ${t.title}</li>`).join('')
+          : '';
+
+        let ownTasks = [];
+        try {
+          ownTasks = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST) || "[]");
+        } catch (err) {
+          console.warn('Failed to parse personal task list', err);
+          ownTasks = [];
+        }
+        const ownHTML = ownTasks.slice(0,3).map(t => `<li>• ${t}</li>`).join('');
+
+        if (!coachHTML && !ownHTML) {
+          taskListEl.innerHTML = `<li class="empty-tasks">Keine Aufgaben offen.</li>`;
+        } else {
+          taskListEl.innerHTML = coachHTML + ownHTML;
+        }
       }
-
-      const ownTasks = JSON.parse(localStorage.getItem(STORAGE_KEY_LIST) || "[]");
-      let ownHTML = ownTasks.slice(0,3).map(t => `<li>• ${t}</li>`).join('');
-
-      if (!coachHTML && !ownHTML) taskListEl.innerHTML = `<li class="empty-tasks">Keine Aufgaben offen.</li>`;
-      else taskListEl.innerHTML = coachHTML + ownHTML;
 
       renderChart(hasEntryForToday, savedLevel);
     }
