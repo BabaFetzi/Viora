@@ -67,15 +67,30 @@
         <article class="card" style="border-left: 4px solid #10b981;">
           <h3 style="color:#10b981">Dinge wegschaffen</h3>
           <p>Nutze die Energie für Aufgaben, die liegengeblieben sind.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ 25 Min fokussiert arbeiten</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Einen Anruf erledigen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Großen Einkauf machen</div>
+          <button type="button" class="energy-activity" data-level="green" data-activity="focus-25" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">25 Min fokussiert arbeiten</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="green" data-activity="call" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Einen Anruf erledigen</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="green" data-activity="groceries" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Großen Einkauf machen</span>
+          </button>
         </article>
         <article class="card">
           <h3>Soziales & Aktiv</h3>
           <p>Geh raus oder triff Leute.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Verabredung ausmachen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Sport machen</div>
+          <button type="button" class="energy-activity" data-level="green" data-activity="hangout" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Verabredung ausmachen</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="green" data-activity="sports" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Sport machen</span>
+          </button>
         </article>
       </div>
 
@@ -83,15 +98,30 @@
         <article class="card" style="border-left: 4px solid #f59e0b;">
           <h3 style="color:#f59e0b">Basis-Programm</h3>
           <p>Nicht übertreiben, aber nicht abrutschen.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Spülmaschine machen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Duschen & anziehen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Mails checken</div>
+          <button type="button" class="energy-activity" data-level="yellow" data-activity="dishwasher" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Spülmaschine machen</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="yellow" data-activity="shower" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Duschen &amp; anziehen</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="yellow" data-activity="emails" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Mails checken</span>
+          </button>
         </article>
         <article class="card">
           <h3>Kontakt Light</h3>
           <p>Verbindung halten ohne Anstrengung.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Sprachnachricht senden</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Briefkasten leeren</div>
+          <button type="button" class="energy-activity" data-level="yellow" data-activity="voicenote" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Sprachnachricht senden</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="yellow" data-activity="mailbox" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Briefkasten leeren</span>
+          </button>
         </article>
       </div>
 
@@ -99,9 +129,18 @@
         <article class="card card-warning" style="border-left: 4px solid #ef4444;">
           <h3 style="color:#ef4444">Selbstfürsorge</h3>
           <p>Heute ist Ruhetag. Das ist okay.</p>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Zähne putzen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:5px;">⬜ Etwas Warmes essen</div>
-          <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px;">⬜ Viel Wasser trinken</div>
+          <button type="button" class="energy-activity" data-level="red" data-activity="brush-teeth" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Zähne putzen</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="red" data-activity="warm-meal" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Etwas Warmes essen</span>
+          </button>
+          <button type="button" class="energy-activity" data-level="red" data-activity="water" aria-pressed="false">
+            <span class="activity-checkbox" aria-hidden="true"></span>
+            <span class="activity-label">Viel Wasser trinken</span>
+          </button>
         </article>
         <article class="card">
           <h3>Hilfe holen?</h3>
@@ -171,10 +210,12 @@
     const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
     const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
     const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
+    const STORAGE_KEY_ACTIVITIES = 'einfachErklaert_EnergyActivities';
     const NETWORK_KEY = 'viora_MyNetwork';
     const USER_KEY = 'viora_current_user';
-
+    
     document.addEventListener('DOMContentLoaded', () => {
+      setupActivitySelection();
       loadEnergyState();
       loadEveningList();
 
@@ -190,9 +231,91 @@
       }
     });
 
+    function getTodayDate() {
+      return new Date().toLocaleDateString();
+    }
+
+    // --- AKTIVITÄTEN / AUSWAHL ---
+    function setupActivitySelection() {
+      document.querySelectorAll('.energy-activity').forEach(activity => {
+        activity.addEventListener('click', () => toggleActivitySelection(activity));
+      });
+      hydrateActivitySelections();
+    }
+
+    function toggleActivitySelection(activityEl) {
+      const level = activityEl?.dataset?.level;
+      const activityId = activityEl?.dataset?.activity;
+      if(!level || !activityId) return;
+
+      const storage = readActivityStorage();
+      const todayKey = getTodayDate();
+      const todayState = ensureDayState(storage, todayKey);
+      const currentSet = new Set(todayState[level]);
+
+      if(currentSet.has(activityId)) {
+        currentSet.delete(activityId);
+      } else {
+        currentSet.add(activityId);
+      }
+
+      todayState[level] = Array.from(currentSet);
+      storage[todayKey] = todayState;
+      saveActivityStorage(storage);
+      hydrateActivitySelections();
+    }
+
+    function hydrateActivitySelections() {
+      const snapshot = getTodayActivitySnapshot();
+      document.querySelectorAll('.energy-activity').forEach(activity => {
+        const level = activity.dataset.level;
+        const activityId = activity.dataset.activity;
+        const isSelected = snapshot[level]?.includes(activityId);
+        activity.classList.toggle('selected', Boolean(isSelected));
+        activity.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+      });
+    }
+
+    function getTodayActivitySnapshot() {
+      const storage = readActivityStorage();
+      const todayState = storage[getTodayDate()];
+      if(!todayState) {
+        return { green: [], yellow: [], red: [] };
+      }
+      return {
+        green: Array.isArray(todayState.green) ? todayState.green.slice() : [],
+        yellow: Array.isArray(todayState.yellow) ? todayState.yellow.slice() : [],
+        red: Array.isArray(todayState.red) ? todayState.red.slice() : []
+      };
+    }
+
+    function readActivityStorage() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY_ACTIVITIES) || "{}");
+      } catch (err) {
+        console.warn('Konnte Aktivitäten nicht laden', err);
+        return {};
+      }
+    }
+
+    function saveActivityStorage(payload) {
+      localStorage.setItem(STORAGE_KEY_ACTIVITIES, JSON.stringify(payload));
+    }
+
+    function ensureDayState(storage, key) {
+      if(!storage[key]) {
+        storage[key] = { green: [], yellow: [], red: [] };
+      } else {
+        ['green','yellow','red'].forEach(level => {
+          if(!Array.isArray(storage[key][level])) storage[key][level] = [];
+        });
+      }
+      return storage[key];
+    }
+
     // --- ENERGIE CHECK ---
     function selectEnergy(level) {
-      const today = new Date().toLocaleDateString();
+      const today = getTodayDate();
       localStorage.setItem(STORAGE_KEY_ENERGY, level);
       localStorage.setItem(STORAGE_KEY_DATE, today);
       
@@ -205,7 +328,7 @@
 
     function loadEnergyState() {
       const savedDate = localStorage.getItem(STORAGE_KEY_DATE);
-      const today = new Date().toLocaleDateString();
+      const today = getTodayDate();
       const savedLevel = localStorage.getItem(STORAGE_KEY_ENERGY);
       if (savedDate === today && savedLevel) { updateEnergyUI(savedLevel); }
     }
@@ -235,6 +358,7 @@
         content.style.opacity = 0;
         setTimeout(() => content.style.opacity = 1, 50);
       }
+      hydrateActivitySelections();
     }
 
     // --- LISTEN LOGIK ---
