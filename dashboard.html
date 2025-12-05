@@ -84,7 +84,7 @@
             </div>
             <div style="padding-left: 10px; border-left: 1px solid rgba(255,255,255,0.1);">
               <h4 style="margin:0 0 10px 0; font-size:1rem; color:var(--accent-blue);">Deine Aufgaben</h4>
-              <ul class="mini-task-list" id="today-tasks"><li class="empty-tasks">Lade Aufgaben...</li></ul>
+              <ul class="mini-task-list" id="list-workplace"><li class="empty-tasks">Lade Aufgaben...</li></ul>
               <div style="margin-top:15px; text-align:right;">
                 <a href="workplace.html" style="font-size:0.75rem; color:var(--text-muted); text-decoration:none; margin-right:10px;">Zum Workplace</a>
                 <a href="struktur.html" style="font-size:0.75rem; color:var(--text-muted); text-decoration:none;">Eigene Liste</a>
@@ -146,16 +146,29 @@
     const STORAGE_KEY_ENERGY = 'einfachErklaert_EnergyLevel';
     const STORAGE_KEY_DATE = 'einfachErklaert_EnergyDate';
     const STORAGE_KEY_LIST = 'einfachErklaert_EveningList';
-    const DB_KEY = 'einfachErklaert_SharedDB';
+    const DB_KEY = 'VIORA_DB';
     const NETWORK_KEY = 'viora_MyNetwork';
     const USER_KEY = 'viora_current_user'; // WICHTIG
 
     const topicMeta = { struktur: { title: 'Struktur & Alltag' }, psyche: { title: 'Psychische Gesundheit' }, digital: { title: 'Digitale Skills' } };
 
+    function ensureDemoGroupConnection() {
+      const userRaw = localStorage.getItem(USER_KEY);
+      if (!userRaw) return;
+      let user = null;
+      try { user = JSON.parse(userRaw); } catch (err) { return; }
+      const username = (user?.username || '').toLowerCase();
+      if (username !== 'anna' && username !== 'ben') return;
+      if (localStorage.getItem(NETWORK_KEY) !== 'WERK-01') {
+        localStorage.setItem(NETWORK_KEY, 'WERK-01');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
       document.getElementById('current-date').innerText = new Date().toLocaleDateString('de-DE', options);
       
+      ensureDemoGroupConnection();
       renderFavs();
       renderDashboardData();
       
@@ -192,14 +205,29 @@
         statusContainer.innerHTML = `<div style="text-align:center;"><p style="margin-bottom:5px; font-weight:600; color:#ef4444;">Check ausstehend!</p><a href="struktur.html" class="reminder-btn">⚠️ Energie prüfen</a></div>`;
       }
 
-      const taskListEl = document.getElementById('today-tasks');
+      const taskListEl = document.getElementById('list-workplace') || document.getElementById('today-tasks');
+      if (!taskListEl) return;
       taskListEl.innerHTML = '';
       let coachHTML = '';
       const myCode = localStorage.getItem(NETWORK_KEY);
       
       if (myCode) {
-        const db = JSON.parse(localStorage.getItem(DB_KEY) || '{"tasks":[]}');
-        const myTasks = db.tasks ? db.tasks.filter(t => t.group === myCode || t.group === 'all') : [];
+        let sharedTasks = [];
+        const dbRaw = localStorage.getItem(DB_KEY);
+        if (dbRaw) {
+          try {
+            const parsed = JSON.parse(dbRaw);
+            if (parsed && Array.isArray(parsed.tasks)) {
+              sharedTasks = parsed.tasks;
+            }
+          } catch (err) {
+            sharedTasks = [];
+          }
+        }
+        const myTasks = sharedTasks.filter(task => {
+          if (!task || !task.group) return false;
+          return task.group === myCode || task.group === 'all';
+        });
         myTasks.slice().reverse().slice(0,3).forEach(t => { coachHTML += `<li><span class="task-source-coach">COACH</span> ${t.title}</li>`; });
       }
 
